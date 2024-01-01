@@ -1,8 +1,8 @@
 package org.beanmodelgraph.tabulizer.integrationtest.cases;
 
 import lombok.SneakyThrows;
-import org.beanmodelgraph.builder.BeanModelGraphBuilder;
-import org.beanmodelgraph.builder.model.BmgNode;
+import org.beanmodelgraph.constructor.BeanModelGraphConstructor;
+import org.beanmodelgraph.constructor.model.BmgNode;
 import org.beanmodelgraph.tabulizer.BeanModelGraphTabulizer;
 import org.beanmodelgraph.tabulizer.integrationtest.model.BmgRowViewObject;
 import org.beanmodelgraph.tabulizer.model.BmgRow;
@@ -25,11 +25,11 @@ public class BmgBuildAndTabulizeITCase {
     @Test
     public void buildAndTabulize() {
 
-        BeanModelGraphBuilder graphBuilder = new BeanModelGraphBuilder();
+        BeanModelGraphConstructor graphConstructor = new BeanModelGraphConstructor();
         BeanModelGraphTabulizer graphTabulizer = new BeanModelGraphTabulizer();
 
 
-        BmgNode rootNode = graphBuilder.buildFromBeanClass(A.class);
+        BmgNode rootNode = graphConstructor.constructFromBeanClass(A.class);
         List<BmgRow> rows = graphTabulizer.toRows(rootNode);
 
         List<BmgRowViewObject> viewObjects = rows.stream().map(BmgRowViewObject::fromBizObject).collect(Collectors.toList());
