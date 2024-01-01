@@ -1,3 +1,14 @@
 dependencies {
+    api(project(":graph-builder"))
     implementation "org.slf4j:slf4j-api"
+    compileOnly "org.projectlombok:lombok"
+    annotationProcessor "org.projectlombok:lombok"
+
+    testImplementation(project(":bmg-test-common"))
+    testImplementation "org.junit.jupiter:junit-jupiter"
+    testImplementation "com.github.chenjianjx.ssio:ssio-ext-html-table"
+    testCompileOnly "org.projectlombok:lombok"
+    testAnnotationProcessor "org.projectlombok:lombok"
+
+
 }

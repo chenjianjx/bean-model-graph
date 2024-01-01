@@ -1,2 +1,3 @@
 include "graph-builder"
 include "graph-tabulizer"
+include "bmg-test-common"
