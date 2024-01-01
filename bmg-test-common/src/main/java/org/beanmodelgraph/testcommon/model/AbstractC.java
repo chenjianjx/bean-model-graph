@@ -1,4 +1,4 @@
 package org.beanmodelgraph.testcommon.model;
 
-public class AbstractC {
+public abstract class AbstractC implements IC{
 }

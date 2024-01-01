@@ -1,6 +1,8 @@
 dependencies {
     compileOnly "org.projectlombok:lombok"
     annotationProcessor "org.projectlombok:lombok"
+    implementation "commons-beanutils:commons-beanutils"
+    implementation "org.slf4j:slf4j-api"
 
     testImplementation "org.junit.jupiter:junit-jupiter"
 }
