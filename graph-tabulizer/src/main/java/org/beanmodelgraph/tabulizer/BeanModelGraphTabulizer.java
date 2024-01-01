@@ -1,6 +1,6 @@
 package org.beanmodelgraph.tabulizer;
 
-import org.beanmodelgraph.builder.model.BmgNode;
+import org.beanmodelgraph.constructor.model.BmgNode;
 import org.beanmodelgraph.tabulizer.model.BmgRow;
 
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package org.beanmodelgraph.builder.model;
+package org.beanmodelgraph.constructor.model;
 
 import lombok.NonNull;
 
@@ -9,7 +9,7 @@ public abstract class BmgEdge {
     /**
      * A.k.a. `color` in a multigragh (graph theory)
      */
-    public abstract BmgEdgeType getEdgeType();
+    public abstract BmgEdgeColor getColor();
 
     @NonNull
     private BmgNode startingNode;

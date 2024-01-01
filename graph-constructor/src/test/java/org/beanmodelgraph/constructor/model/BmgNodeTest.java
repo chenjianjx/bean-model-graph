@@ -1,4 +1,4 @@
-package org.beanmodelgraph.builder.model;
+package org.beanmodelgraph.constructor.model;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

@@ -1,4 +1,4 @@
-package org.beanmodelgraph.builder.model;
+package org.beanmodelgraph.constructor.model;
 
 
 import lombok.Builder;

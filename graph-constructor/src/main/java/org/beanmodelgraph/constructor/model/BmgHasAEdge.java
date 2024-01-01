@@ -1,4 +1,4 @@
-package org.beanmodelgraph.builder.model;
+package org.beanmodelgraph.constructor.model;
 
 
 import lombok.EqualsAndHashCode;
@@ -12,7 +12,7 @@ public class BmgHasAEdge extends BmgEdge {
 
 
     @Override
-    public BmgEdgeType getEdgeType() {
-        return BmgEdgeType.HAS_A;
+    public BmgEdgeColor getColor() {
+        return BmgEdgeColor.HAS_A;
     }
 }
