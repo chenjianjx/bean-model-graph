@@ -1,8 +1,8 @@
 package org.beanmodelgraph.testcommon.model;
 
-import lombok.Value;
+import lombok.Getter;
 
-@Value
+@Getter
 public class B {
 
     private IC c;

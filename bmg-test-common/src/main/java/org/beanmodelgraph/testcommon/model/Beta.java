@@ -1,9 +1,8 @@
 package org.beanmodelgraph.testcommon.model;
 
-import lombok.Builder;
-import lombok.Value;
+import lombok.Getter;
 
-@Value
+@Getter
 public class Beta {
     private String someString;
 }
