@@ -18,7 +18,7 @@ public class BmgHasAEdge extends BmgEdge {
 
     @NonNull
     private String propName;
-    private boolean collectionProp;
+    private boolean multiOccur;
 
 
     @Override

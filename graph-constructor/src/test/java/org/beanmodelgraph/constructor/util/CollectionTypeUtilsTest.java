@@ -3,12 +3,12 @@ package org.beanmodelgraph.constructor.util;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.Array;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class CollectionTypeUtilsTest {
+
 
     public List getRawList() {
         return null;
@@ -35,15 +35,15 @@ class CollectionTypeUtilsTest {
         return null;
     }
 
-    public List<List>[] getListOfRawLists() {
-        return null;
-    }
-
-    public List<List<String>>[] getListOfStringLists() {
+    public List<List> getListOfRawLists() {
         return null;
     }
 
     public Object[][] getArrayOfRawArrays() {
+        return null;
+    }
+
+    public List<List<String>> getListOfStringLists() {
         return null;
     }
 
@@ -111,7 +111,5 @@ class CollectionTypeUtilsTest {
     void getMethodGenericReturnTypeIfArrayOrCollection_arrayOfStringArrays() {
         assertEquals(String[].class, CollectionTypeUtils.getMethodGenericReturnTypeIfArrayOrCollection(this.getClass().getMethod("getArrayOfStringArrays")));
     }
-
-
 
 }

@@ -15,23 +15,29 @@ public class CollectionTypeUtils {
 
     public static Class<?> getMethodGenericReturnTypeIfArrayOrCollection(Method method) {
         Type genericReturnType = method.getGenericReturnType();
-        if (genericReturnType instanceof Class) {
+        if (genericReturnType instanceof Class) { //raw collection, raw array, non-raw array
             Optional<Class<?>> componentType = Optional.ofNullable(((Class<?>) genericReturnType).getComponentType());
-            if (componentType.isPresent()) {
-                return componentType.get();
-            } else {
-                return Object.class;
-            }
-        } else if (genericReturnType instanceof GenericArrayType) {
+            return componentType.isPresent() ? componentType.get() : Object.class;
+        } else if (genericReturnType instanceof GenericArrayType) {//array of non-raw collection
             Type componentType = ((GenericArrayType) genericReturnType).getGenericComponentType();
-            return (Class<?>) ((ParameterizedType) componentType).getRawType();
-        } else if (genericReturnType instanceof ParameterizedType) {
+            return extractRawType(componentType);
+        } else if (genericReturnType instanceof ParameterizedType) { //non-raw collection
             Type[] typeArguments = ((ParameterizedType) genericReturnType).getActualTypeArguments();
-            Type type = typeArguments[0];
-            return (Class<?>) type;
+            return extractRawType(typeArguments[0]);
         } else {
-            throw new UnsupportedOperationException();
+            throw new UnsupportedOperationException(genericReturnType.getClass().getName());
         }
     }
 
+    private static Class<?> extractRawType(Type type) {
+        if (type instanceof Class) {
+            return (Class<?>) type;
+        } else if (type instanceof GenericArrayType) {
+            return (Class<?>) ((ParameterizedType) type).getRawType();
+        } else if (type instanceof ParameterizedType) {
+            return (Class<?>) ((ParameterizedType) type).getRawType();
+        } else {
+            throw new UnsupportedOperationException(type.getClass().getName());
+        }
+    }
 }

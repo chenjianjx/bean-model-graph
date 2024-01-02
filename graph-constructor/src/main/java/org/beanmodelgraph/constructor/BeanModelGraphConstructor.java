@@ -13,7 +13,6 @@ import org.beanmodelgraph.constructor.model.BmgParentOfEdge;
 import org.beanmodelgraph.constructor.traverse.BmgDfsTraverser;
 import org.beanmodelgraph.constructor.traverse.BmgNodeDfsListener;
 import org.beanmodelgraph.constructor.util.CollectionTypeUtils;
-import org.beanmodelgraph.constructor.util.GenericsUtils;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
@@ -83,7 +82,7 @@ public class BeanModelGraphConstructor {
         BmgNode rootNode = new BmgNode(beanClass);
         expandedNodes.put(beanClass, rootNode);
 
-        if (atomicTypeResolver.isAtomicType(beanClass)) {
+        if (atomicTypeResolver.isAtomicType(beanClass) || CollectionTypeUtils.isClassArrayOrCollection(beanClass)) {
             rootNode.setEdges(Collections.emptyList());
         } else {
             List<BmgHasAEdge> hasAEdges = getHasAEdges(beanClass);
@@ -134,8 +133,13 @@ public class BeanModelGraphConstructor {
         BmgHasAEdge.BmgHasAEdgeBuilder edgeBuilder = BmgHasAEdge.builder();
         edgeBuilder.propName(pd.getName());
 
-        edgeBuilder.collectionProp(CollectionTypeUtils.isClassArrayOrCollection(getter.getReturnType()));
-        edgeBuilder.endingNode(doConstruct(GenericsUtils.getMethodGenericReturnType(getter)));
+        Class<?> getterReturnType = getter.getReturnType();
+        boolean multiOccur = CollectionTypeUtils.isClassArrayOrCollection(getterReturnType);
+        edgeBuilder.multiOccur(multiOccur);
+
+        Class<?> endingNodeBeanClass = multiOccur ?
+                CollectionTypeUtils.getMethodGenericReturnTypeIfArrayOrCollection(getter) : getterReturnType;
+        edgeBuilder.endingNode(doConstruct(endingNodeBeanClass));
 
         return Optional.of(edgeBuilder.build());
     }
