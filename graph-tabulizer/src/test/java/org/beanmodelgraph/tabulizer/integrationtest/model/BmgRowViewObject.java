@@ -2,12 +2,10 @@ package org.beanmodelgraph.tabulizer.integrationtest.model;
 
 import lombok.Builder;
 import lombok.Value;
-import org.beanmodelgraph.constructor.model.BmgEdge;
 import org.beanmodelgraph.constructor.model.BmgHasAEdge;
 import org.beanmodelgraph.tabulizer.model.BmgRow;
 import org.ssio.api.interfaces.annotation.SsColumn;
 
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 
@@ -16,18 +14,20 @@ import java.util.stream.Collectors;
 public class BmgRowViewObject {
 
     @SsColumn(index = 0)
-    private String path;
+    private String propertyPath;
 
-    @SsColumn(index = 1)
+    @SsColumn(index = 1, name = "Type")
     private String typeSimpleName;
 
     public static BmgRowViewObject fromBizObject(BmgRow bo) {
         return BmgRowViewObject.builder()
-                .path(bo.getPath().stream().map(edge -> extractPropName((BmgHasAEdge) edge)).collect(Collectors.joining(".")))
+                .propertyPath(bo.getPath().stream().map(edge -> extractPropName((BmgHasAEdge) edge)).collect(Collectors.joining(".")))
                 .typeSimpleName(bo.getType().getSimpleName()).build();
     }
 
     private static String extractPropName(BmgHasAEdge edge) {
-        return edge.getPropName();
+        return edge.getPropName()
+                +
+                (edge.isCollectionProp() ? "[]" : "");
     }
 }
