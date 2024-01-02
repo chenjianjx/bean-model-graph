@@ -35,7 +35,7 @@ public class BmgBuildAndTabulizeITCase {
         BeanModelGraphTabulizer graphTabulizer = new BeanModelGraphTabulizer();
 
         BmgNode rootNode = graphConstructor.construct();
-        List<BmgRow> rows = graphTabulizer.toRows(rootNode, true);
+        List<BmgRow> rows = graphTabulizer.toRows(rootNode);
 
         List<BmgRowViewObject> viewObjects = rows.stream().map(this::fromBizObject).collect(Collectors.toList());
 

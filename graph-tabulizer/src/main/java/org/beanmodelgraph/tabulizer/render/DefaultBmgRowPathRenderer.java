@@ -12,18 +12,22 @@ import java.util.List;
 public class DefaultBmgRowPathRenderer implements BmgRowPathRenderer {
     @Override
     public String render(List<BmgEdge> path) {
-        StringBuilder result = new StringBuilder();
+        StringBuilder resultBuilder = new StringBuilder();
         for (BmgEdge edge : path) {
             if (edge instanceof BmgHasAEdge) {
-                result.append(".").append(extractPropName((BmgHasAEdge) edge));
+                resultBuilder.append(".").append(extractPropName((BmgHasAEdge) edge));
             } else if (edge instanceof BmgParentOfEdge) {
-                result.append("<").append(edge.getEndingNode().getBeanClass().getSimpleName()).append(">");
+                resultBuilder.append("<").append(edge.getEndingNode().getBeanClass().getSimpleName()).append(">");
             } else {
                 throw new IllegalArgumentException(edge.getClass().toString());
             }
         }
-        return result.toString()
-                .replace("><", "|"); //<AbstractC><ConcreteCBar> => <AbstractC|ConcreteCBar>, hacky but it works
+        String result = resultBuilder.toString();
+        result = result.replace("><", "|"); //<AbstractC><ConcreteCBar> => <AbstractC|ConcreteCBar>, hacky but it works
+        if (!result.contains(".")) {
+            result = result + ".";  //works for root node and its PARENT_OF ending nodes
+        }
+        return result;
     }
 
     private String extractPropName(BmgHasAEdge edge) {

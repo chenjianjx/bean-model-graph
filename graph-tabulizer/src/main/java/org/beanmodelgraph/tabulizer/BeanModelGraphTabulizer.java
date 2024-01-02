@@ -29,19 +29,15 @@ public class BeanModelGraphTabulizer {
         }
     }
 
-    /**
-     *
-     * @param propertyPathOnly  Only retain rows which represents a property (i.e. ending node of a HAS_A edge).
-     *
-     */
-    public List<BmgRow> toRows(BmgNode rootNode, boolean propertyPathOnly) {
+
+    public List<BmgRow> toRows(BmgNode rootNode) {
         NodeToRowListener nodeListener = new NodeToRowListener();
         BmgDfsTraverser traverser = new BmgDfsTraverser(nodeListener);
         traverser.traverse(rootNode);
         List<BmgRow> rows = nodeListener.getRows();
-        if(propertyPathOnly){
-            rows = rows.stream().filter(r -> isPropertyPath(r.getPath())).collect(Collectors.toList());
-        }
+//        if(propertyPathOnly){
+//            rows = rows.stream().filter(r -> isPropertyPath(r.getPath())).collect(Collectors.toList());
+//        }
         return rows;
     }
 
