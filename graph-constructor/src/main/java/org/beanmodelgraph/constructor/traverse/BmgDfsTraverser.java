@@ -26,24 +26,24 @@ public class BmgDfsTraverser implements BeanModelGraphTraverser {
 
     @Override
     public void traverse(@NonNull BmgNode rootNode) {
-        doTraverse(Collections.emptyList(), Optional.empty(), rootNode);
+        doTraverse(Optional.empty(), Collections.emptyList(), Optional.empty(), rootNode);
     }
 
-    private void doTraverse(List<BmgEdge> pathOfPrevNode, Optional<BmgEdge> edgeToThisNode, BmgNode thisNode) {
+    private void doTraverse(Optional<BmgNode> prevNodeOpt, List<BmgEdge> pathOfPrevNode, Optional<BmgEdge> edgeToThisNode, BmgNode thisNode) {
 
 
         List<BmgEdge> pathOfThisNode = new ArrayList<>();
         pathOfThisNode.addAll(pathOfPrevNode);
         edgeToThisNode.ifPresent(eo -> pathOfThisNode.add(eo));
 
-        nodeListener.onNode(pathOfThisNode, thisNode);
+        nodeListener.onNode(pathOfThisNode, thisNode, prevNodeOpt);
 
         if (expandedNodes.contains(thisNode)) {
             return;
         } else {
             expandedNodes.add(thisNode);
-            for (BmgEdge edgeToNextNode : thisNode.getEdges()) {
-                doTraverse(pathOfThisNode, Optional.of(edgeToNextNode), edgeToNextNode.getEndingNode());
+            for (BmgEdge edgeToNextNode : new ArrayList<>(thisNode.getEdges())) { //make a copy because some listener can make modifications during traversal
+                doTraverse(Optional.of(thisNode), pathOfThisNode, Optional.of(edgeToNextNode), edgeToNextNode.getEndingNode());
             }
         }
     }

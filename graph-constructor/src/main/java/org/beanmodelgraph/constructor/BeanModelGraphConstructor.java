@@ -10,6 +10,8 @@ import org.beanmodelgraph.constructor.model.BmgEdge;
 import org.beanmodelgraph.constructor.model.BmgHasAEdge;
 import org.beanmodelgraph.constructor.model.BmgNode;
 import org.beanmodelgraph.constructor.model.BmgParentOfEdge;
+import org.beanmodelgraph.constructor.traverse.BmgDfsTraverser;
+import org.beanmodelgraph.constructor.traverse.BmgNodeDfsListener;
 import org.beanmodelgraph.constructor.util.GenericsUtils;
 
 import java.beans.PropertyDescriptor;
@@ -65,8 +67,11 @@ public class BeanModelGraphConstructor {
      * @return The root node of this graph
      */
     public BmgNode construct() {
-        return doConstruct(rootBeanClass);
+        BmgNode rootNode = doConstruct(rootBeanClass);
+        removeUnnecessaryHasAEdges(rootNode);
+        return rootNode;
     }
+
 
     private BmgNode doConstruct(Class<?> beanClass) {
         Optional<BmgNode> expandedNodeOpt = Optional.ofNullable(expandedNodes.get(beanClass));
@@ -94,8 +99,8 @@ public class BeanModelGraphConstructor {
     private <T> List<BmgParentOfEdge> getParentOfEdges(Class<T> beanClass) {
         Set<Class<? extends T>> directSubTypes = inheritanceService.getDirectSubTypes(beanClass, subTypeScanBasePackages);
         return directSubTypes.stream().map(subType -> BmgParentOfEdge.builder()
-                .endingNode(doConstruct(subType))
-                .build())
+                        .endingNode(doConstruct(subType))
+                        .build())
                 .collect(Collectors.toList());
     }
 
@@ -111,28 +116,79 @@ public class BeanModelGraphConstructor {
                         )
                         .collect(Collectors.toList());
         List<BmgHasAEdge> hasAEdges = propertyDescriptors.stream()
-                .map(pd -> toOutgoingHasAEdge(pd)).filter(eo -> eo.isPresent())
+                .map(pd -> toOutgoingHasAEdge(beanClass, pd)).filter(eo -> eo.isPresent())
                 .map(eo -> eo.get()).collect(Collectors.toList());
         return hasAEdges;
     }
 
-    private Optional<BmgHasAEdge> toOutgoingHasAEdge(PropertyDescriptor pd) {
+    private Optional<BmgHasAEdge> toOutgoingHasAEdge(Class<?> beanClass, PropertyDescriptor pd) {
 
         Optional<Method> getterOpt = Optional.ofNullable(pd.getReadMethod());
         if (!getterOpt.isPresent()) {
-            log.warn("Cannot find getter method for property {}. Will skip this property", pd.getName());
+            log.warn("Cannot find getter method for property {}.{}. Will skip this property", beanClass.getSimpleName(), pd.getName());
             return Optional.empty();
         }
 
+
+        Method getter = getterOpt.get();
         BmgHasAEdge.BmgHasAEdgeBuilder edgeBuilder = BmgHasAEdge.builder();
         edgeBuilder.propName(pd.getName());
-        edgeBuilder.collectionProp(isClassArrayOrCollection(getterOpt.get().getReturnType()));
-        edgeBuilder.endingNode(doConstruct(GenericsUtils.getMethodGenericReturnType(getterOpt.get())));
+
+        edgeBuilder.collectionProp(isClassArrayOrCollection(getter.getReturnType()));
+        edgeBuilder.endingNode(doConstruct(GenericsUtils.getMethodGenericReturnType(getter)));
 
         return Optional.of(edgeBuilder.build());
     }
 
     private boolean isClassArrayOrCollection(Class<?> clazz) {
         return clazz.isArray() || Collection.class.isAssignableFrom(clazz);
+    }
+
+    private void removeUnnecessaryHasAEdges(BmgNode rootNode) {
+
+        BmgDfsTraverser traverser = new BmgDfsTraverser(
+                new HasAEdgeByInheritanceRemover(expandedNodes.keySet(), this.inheritanceService)
+        );
+
+        traverser.traverse(rootNode);
+    }
+
+
+    private static final class HasAEdgeByInheritanceRemover implements BmgNodeDfsListener {
+
+        private Set<Class<?>> allClassesInGraph;
+        private InheritanceService inheritanceService;
+
+        public HasAEdgeByInheritanceRemover(Set<Class<?>> allClassesInGraph, InheritanceService inheritanceService) {
+            this.allClassesInGraph = allClassesInGraph;
+            this.inheritanceService = inheritanceService;
+        }
+
+        @Override
+        public void onNode(List<BmgEdge> pathOfThisNode, BmgNode node, Optional<BmgNode> prevNodeOpt) {
+            if (pathOfThisNode.isEmpty() || !prevNodeOpt.isPresent()) {
+                return;
+            }
+
+            BmgEdge edgeToThisNode = pathOfThisNode.get(pathOfThisNode.size() - 1);
+            if (!(edgeToThisNode instanceof BmgHasAEdge)) {
+                return;
+            }
+
+
+            BmgHasAEdge edge = (BmgHasAEdge) edgeToThisNode;
+            BmgNode prevNode = prevNodeOpt.get();
+            Class<?> prevNodeBeanClass = prevNode.getBeanClass();
+            Method getter =
+                    Arrays.stream(PropertyUtils.getPropertyDescriptors(prevNodeBeanClass))
+                            .filter(pd -> pd.getName().equals(edge.getPropName()))
+                            .findFirst().get().getReadMethod();
+            if (inheritanceService.isMethodInheritedFrom(prevNodeBeanClass, getter, allClassesInGraph)) {
+                log.info("Remove edge {}.{} because the property is inherited", prevNodeBeanClass.getSimpleName(), edge.getPropName());
+                prevNode.removeEdge(edge);
+            }
+
+        }
+
     }
 }

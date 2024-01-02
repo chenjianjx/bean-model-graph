@@ -9,6 +9,7 @@ import org.beanmodelgraph.tabulizer.model.BmgRow;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class BeanModelGraphTabulizer {
@@ -18,8 +19,8 @@ public class BeanModelGraphTabulizer {
         private List<BmgRow> rows = new ArrayList<>();
 
         @Override
-        public void onNode(List<BmgEdge> pathOfThisNode, BmgNode node) {
-            BmgRow row = BmgRow.builder().path(pathOfThisNode).type(node.getType()).build();
+        public void onNode(List<BmgEdge> pathOfThisNode, BmgNode node, Optional<BmgNode> prevNodeOpt) {
+            BmgRow row = BmgRow.builder().path(pathOfThisNode).type(node.getBeanClass()).build();
             rows.add(row);
         }
 

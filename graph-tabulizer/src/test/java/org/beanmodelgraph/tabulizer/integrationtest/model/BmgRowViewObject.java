@@ -1,7 +1,6 @@
 package org.beanmodelgraph.tabulizer.integrationtest.model;
 
 import lombok.Builder;
-import lombok.NonNull;
 import lombok.Value;
 import org.beanmodelgraph.constructor.model.BmgEdge;
 import org.beanmodelgraph.constructor.model.BmgHasAEdge;
@@ -10,7 +9,6 @@ import org.beanmodelgraph.tabulizer.model.BmgRow;
 import org.ssio.api.interfaces.annotation.SsColumn;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 @Builder
@@ -35,13 +33,16 @@ public class BmgRowViewObject {
             if (edge instanceof BmgHasAEdge) {
                 result.append(".").append(extractPropName((BmgHasAEdge) edge));
             } else if (edge instanceof BmgParentOfEdge) {
-                result.append("<").append(edge.getEndingNode().getType().getSimpleName()).append(">");
+                result.append("<").append(edge.getEndingNode().getBeanClass().getSimpleName()).append(">");
             } else {
                 throw new IllegalArgumentException(edge.getClass().toString());
             }
         }
 
-        return result.toString();
+
+
+        return result.toString()
+                .replace("><", "|"); //<AbstractC><ConcreteCBar> => <AbstractC|ConcreteCBar>, hacky but it works
     }
 
     private static String extractPropName(BmgHasAEdge edge) {

@@ -14,10 +14,10 @@ import java.util.List;
 public class BmgNode {
 
 
-    private final Class<?> type;
+    private final Class<?> beanClass;
 
-    public BmgNode(@NonNull Class<?> type) {
-        this.type = type;
+    public BmgNode(@NonNull Class<?> beanClass) {
+        this.beanClass = beanClass;
     }
 
     @NonNull
@@ -35,5 +35,9 @@ public class BmgNode {
     @Override
     public int hashCode() {
         return super.hashCode();
+    }
+
+    public void removeEdge(BmgEdge edge) {
+        edges.remove(edge);
     }
 }

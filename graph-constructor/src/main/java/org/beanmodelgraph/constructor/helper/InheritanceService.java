@@ -4,6 +4,7 @@ import org.reflections.Reflections;
 import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
 
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -38,6 +39,25 @@ public class InheritanceService {
         return subtypes;
     }
 
+    public boolean isMethodInheritedFrom(Class<?> subClass, Method method, Set<Class<?>> candidateClasses) {
+        Optional<Class<?>> target = candidateClasses.stream()
+                .filter(pc -> (pc.isAssignableFrom(subClass) && !pc.equals(subClass))) //get parent classes
+                .filter(pc -> hasMethodWithSameSignature(pc, method))
+                .findFirst();
+
+        return target.isPresent();
+    }
+
+    private boolean hasMethodWithSameSignature(Class<?> clazz, Method method) {
+        try {
+            clazz.getMethod(method.getName(), method.getParameterTypes());
+            return true;
+        } catch (NoSuchMethodException e) {
+            return false;
+        }
+    }
+
+
     private boolean isDirectChildOf(Class<?> subClass, Class<?> parentClass) {
         Optional<Class<?>> superClassOfSub = Optional.ofNullable(subClass.getSuperclass());
         Set<Class<?>> interfacesOfSub = Arrays.stream(Optional.ofNullable(subClass.getInterfaces())
@@ -46,4 +66,6 @@ public class InheritanceService {
 
         return superClassOfSub.equals(Optional.of(parentClass)) || interfacesOfSub.contains(parentClass);
     }
+
+
 }
