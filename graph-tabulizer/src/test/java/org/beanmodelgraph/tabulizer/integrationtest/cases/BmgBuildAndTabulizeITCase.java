@@ -25,11 +25,10 @@ public class BmgBuildAndTabulizeITCase {
     @Test
     public void buildAndTabulize() {
 
-        BeanModelGraphConstructor graphConstructor = new BeanModelGraphConstructor();
+        BeanModelGraphConstructor graphConstructor = new BeanModelGraphConstructor(A.class);
         BeanModelGraphTabulizer graphTabulizer = new BeanModelGraphTabulizer();
 
-
-        BmgNode rootNode = graphConstructor.constructFromBeanClass(A.class);
+        BmgNode rootNode = graphConstructor.construct();
         List<BmgRow> rows = graphTabulizer.toRows(rootNode);
 
         List<BmgRowViewObject> viewObjects = rows.stream().map(BmgRowViewObject::fromBizObject).collect(Collectors.toList());

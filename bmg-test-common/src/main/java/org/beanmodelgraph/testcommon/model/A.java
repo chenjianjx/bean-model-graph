@@ -1,10 +1,10 @@
 package org.beanmodelgraph.testcommon.model;
 
-import lombok.Value;
+import lombok.Getter;
 
 import java.util.List;
 
-@Value
+@Getter
 public class A {
 
     private B b1;

@@ -15,7 +15,9 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -27,22 +29,44 @@ import java.util.stream.Collectors;
  * * Edges can be one of 2 "colors":
  * * A "has a" B property
  * * A "is a parent" of B class
+ * <p>
+ * <p>
+ * <p>
+ * Thread-safety:  not safe, one-time use
  */
 @Slf4j
 public class BeanModelGraphConstructor {
 
+    Map<Class<?>, BmgNode> existingNodes = new HashMap<>();
+    private AtomicTypeResolver atomicTypeResolver = new AtomicTypeResolver();
+
+    private final Class<?> rootBeanClass;
+
+    public BeanModelGraphConstructor(Class<?> rootBeanClass) {
+        this.rootBeanClass = rootBeanClass;
+    }
+
     /**
      * construct a graph.
      *
-     * @param beanClass
      * @return The root node of this graph
      */
-    public BmgNode constructFromBeanClass(Class<?> beanClass) {
-        AtomicTypeResolver atomicTypeResolver = new AtomicTypeResolver();
-        BmgNode.BmgNodeBuilder rootNodeBuilder = BmgNode.builder().type(beanClass);
+    public BmgNode construct() {
+        return doConstruct(rootBeanClass);
+    }
+
+    private BmgNode doConstruct(Class<?> beanClass) {
+        Optional<BmgNode> existingNodeOpt = Optional.ofNullable(existingNodes.get(beanClass));
+        if (existingNodeOpt.isPresent()) {
+            return existingNodeOpt.get();
+        }
+
+
+        BmgNode rootNode = new BmgNode(beanClass);
+        existingNodes.put(beanClass, rootNode);
 
         if (atomicTypeResolver.isAtomicType(beanClass)) {
-            return rootNodeBuilder.edges(Collections.emptyList()).build();
+            rootNode.setEdges(Collections.emptyList());
         } else {
             List<PropertyDescriptor> propertyDescriptors =
                     Arrays.stream(PropertyUtils.getPropertyDescriptors(beanClass))
@@ -54,19 +78,15 @@ public class BeanModelGraphConstructor {
                                             .thenComparing(PropertyDescriptor::getName)
                             )
                             .collect(Collectors.toList());
-
-
             List<BmgEdge> edges = propertyDescriptors.stream()
-                    .map(pd -> toEdge(pd)).filter(eo -> eo.isPresent())
+                    .map(pd -> toOutgoingEdge(pd)).filter(eo -> eo.isPresent())
                     .map(eo -> eo.get()).collect(Collectors.toList());
-            rootNodeBuilder.edges(edges);
-            return rootNodeBuilder.build();
+            rootNode.setEdges(edges);
         }
-
-
+        return rootNode;
     }
 
-    private Optional<BmgEdge> toEdge(PropertyDescriptor pd) {
+    private Optional<BmgEdge> toOutgoingEdge(PropertyDescriptor pd) {
 
         Method getter = pd.getReadMethod();
         if (getter == null) {
@@ -76,7 +96,7 @@ public class BeanModelGraphConstructor {
 
         BmgHasAEdge.BmgHasAEdgeBuilder edgeBuilder = BmgHasAEdge.builder();
         edgeBuilder.propName(pd.getName());
-        edgeBuilder.endingNode(constructFromBeanClass(GenericsUtils.getMethodGenericReturnType(getter)));
+        edgeBuilder.endingNode(doConstruct(GenericsUtils.getMethodGenericReturnType(getter)));
 
         return Optional.of(edgeBuilder.build());
     }

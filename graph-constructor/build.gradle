@@ -4,5 +4,8 @@ dependencies {
     implementation "commons-beanutils:commons-beanutils"
     implementation "org.slf4j:slf4j-api"
 
+    testCompileOnly "org.projectlombok:lombok"
+    testAnnotationProcessor "org.projectlombok:lombok"
     testImplementation "org.junit.jupiter:junit-jupiter"
+    testRuntimeOnly "org.slf4j:slf4j-simple"
 }
