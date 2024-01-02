@@ -1,11 +1,15 @@
 package org.beanmodelgraph.tabulizer.integrationtest.model;
 
 import lombok.Builder;
+import lombok.NonNull;
 import lombok.Value;
+import org.beanmodelgraph.constructor.model.BmgEdge;
 import org.beanmodelgraph.constructor.model.BmgHasAEdge;
+import org.beanmodelgraph.constructor.model.BmgParentOfEdge;
 import org.beanmodelgraph.tabulizer.model.BmgRow;
 import org.ssio.api.interfaces.annotation.SsColumn;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 
@@ -21,8 +25,23 @@ public class BmgRowViewObject {
 
     public static BmgRowViewObject fromBizObject(BmgRow bo) {
         return BmgRowViewObject.builder()
-                .propertyPath(bo.getPath().stream().map(edge -> extractPropName((BmgHasAEdge) edge)).collect(Collectors.joining(".")))
+                .propertyPath(pathToString(bo.getPath()))
                 .typeSimpleName(bo.getType().getSimpleName()).build();
+    }
+
+    private static String pathToString(List<BmgEdge> path) {
+        StringBuilder result = new StringBuilder();
+        for (BmgEdge edge : path) {
+            if (edge instanceof BmgHasAEdge) {
+                result.append(".").append(extractPropName((BmgHasAEdge) edge));
+            } else if (edge instanceof BmgParentOfEdge) {
+                result.append("<").append(edge.getEndingNode().getType().getSimpleName()).append(">");
+            } else {
+                throw new IllegalArgumentException(edge.getClass().toString());
+            }
+        }
+
+        return result.toString();
     }
 
     private static String extractPropName(BmgHasAEdge edge) {

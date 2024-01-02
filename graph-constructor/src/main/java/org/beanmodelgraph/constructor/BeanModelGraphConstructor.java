@@ -111,12 +111,12 @@ public class BeanModelGraphConstructor {
                         )
                         .collect(Collectors.toList());
         List<BmgHasAEdge> hasAEdges = propertyDescriptors.stream()
-                .map(pd -> toOutgoingEdge(pd)).filter(eo -> eo.isPresent())
+                .map(pd -> toOutgoingHasAEdge(pd)).filter(eo -> eo.isPresent())
                 .map(eo -> eo.get()).collect(Collectors.toList());
         return hasAEdges;
     }
 
-    private Optional<BmgHasAEdge> toOutgoingEdge(PropertyDescriptor pd) {
+    private Optional<BmgHasAEdge> toOutgoingHasAEdge(PropertyDescriptor pd) {
 
         Optional<Method> getterOpt = Optional.ofNullable(pd.getReadMethod());
         if (!getterOpt.isPresent()) {

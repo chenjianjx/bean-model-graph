@@ -1,6 +1,7 @@
 package org.beanmodelgraph.tabulizer;
 
 import org.beanmodelgraph.constructor.model.BmgEdge;
+import org.beanmodelgraph.constructor.model.BmgHasAEdge;
 import org.beanmodelgraph.constructor.model.BmgNode;
 import org.beanmodelgraph.constructor.traverse.BmgDfsTraverser;
 import org.beanmodelgraph.constructor.traverse.BmgNodeDfsListener;
@@ -8,6 +9,7 @@ import org.beanmodelgraph.tabulizer.model.BmgRow;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class BeanModelGraphTabulizer {
 
@@ -26,12 +28,24 @@ public class BeanModelGraphTabulizer {
         }
     }
 
-    public List<BmgRow> toRows(BmgNode rootNode) {
+    /**
+     *
+     * @param propertyPathOnly  Only retain rows which represents a property (i.e. ending node of a HAS_A edge),  default false.
+     *
+     */
+    public List<BmgRow> toRows(BmgNode rootNode, boolean propertyPathOnly) {
         NodeToRowListener nodeListener = new NodeToRowListener();
         BmgDfsTraverser traverser = new BmgDfsTraverser(nodeListener);
         traverser.traverse(rootNode);
         List<BmgRow> rows = nodeListener.getRows();
-        return rows.subList(1, rows.size()); //first row is for the root bean and it's meaningless. So remove it
+        if(propertyPathOnly){
+            rows = rows.stream().filter(r -> isPropertyPath(r.getPath())).collect(Collectors.toList());
+        }
+        return rows;
+    }
+
+    private boolean isPropertyPath(List<BmgEdge> path) {
+        return path.size() > 0 && (path.get(path.size() - 1) instanceof BmgHasAEdge);
     }
 
 }
