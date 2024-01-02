@@ -5,6 +5,9 @@ import org.beanmodelgraph.constructor.model.BmgNode;
 
 import java.util.List;
 
+/**
+ * Thread-safety:  not safe
+ */
 public interface BmgNodeDfsListener {
     void onNode(List<BmgEdge> pathOfThisNode, BmgNode node);
 }

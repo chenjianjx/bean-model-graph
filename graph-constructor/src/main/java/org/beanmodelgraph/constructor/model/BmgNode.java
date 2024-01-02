@@ -1,28 +1,27 @@
 package org.beanmodelgraph.constructor.model;
 
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 import lombok.ToString;
-import lombok.experimental.FieldDefaults;
 
 import java.util.List;
 
 
-@Builder
 @Getter
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-@AllArgsConstructor
 @ToString
 public class BmgNode {
 
-    @NonNull
-    private Class<?> type;
+
+    private final Class<?> type;
+
+    public BmgNode(@NonNull Class<?> type) {
+        this.type = type;
+    }
 
     @NonNull
+    @Setter
     private List<BmgEdge> edges;
 
     /**
