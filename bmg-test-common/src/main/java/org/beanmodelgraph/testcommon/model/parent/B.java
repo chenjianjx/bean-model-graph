@@ -6,8 +6,8 @@ import org.beanmodelgraph.testcommon.model.child.ConcreteCFoo;
 @Getter
 public class B {
 
-    private ConcreteCFoo aaaDirectCFoo;
-    private IC c;
 
+    private IC c;
+    private ConcreteCFoo zzzDirectCFoo;
 
 }

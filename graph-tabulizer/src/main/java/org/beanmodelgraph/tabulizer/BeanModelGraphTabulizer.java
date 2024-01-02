@@ -31,7 +31,7 @@ public class BeanModelGraphTabulizer {
 
     /**
      *
-     * @param propertyPathOnly  Only retain rows which represents a property (i.e. ending node of a HAS_A edge),  default false.
+     * @param propertyPathOnly  Only retain rows which represents a property (i.e. ending node of a HAS_A edge).
      *
      */
     public List<BmgRow> toRows(BmgNode rootNode, boolean propertyPathOnly) {
