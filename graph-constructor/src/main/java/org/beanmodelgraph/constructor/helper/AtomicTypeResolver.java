@@ -8,6 +8,9 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * one time use
+ */
 public class AtomicTypeResolver {
 
     private static Set<Class<?>> defaultAtomicTypes = new HashSet<>();

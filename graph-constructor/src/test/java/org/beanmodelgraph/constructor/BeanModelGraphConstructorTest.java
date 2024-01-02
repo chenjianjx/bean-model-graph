@@ -3,6 +3,8 @@ package org.beanmodelgraph.constructor;
 import lombok.Value;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class BeanModelGraphConstructorTest {
@@ -19,8 +21,8 @@ class BeanModelGraphConstructorTest {
 
     @Test
     void constructFromBeanClass_dedupeTest() {
-        BeanModelGraphConstructor constructor = new BeanModelGraphConstructor(DedupeTestA.class);
+        BeanModelGraphConstructor constructor = new BeanModelGraphConstructor(DedupeTestA.class, new ArrayList<>());
         constructor.construct();
-        assertEquals(2, constructor.existingNodes.size());
+        assertEquals(2, constructor.expandedNodes.size());
     }
 }

@@ -6,13 +6,14 @@ import org.beanmodelgraph.constructor.model.BmgNode;
 import org.beanmodelgraph.tabulizer.BeanModelGraphTabulizer;
 import org.beanmodelgraph.tabulizer.integrationtest.model.BmgRowViewObject;
 import org.beanmodelgraph.tabulizer.model.BmgRow;
-import org.beanmodelgraph.testcommon.model.A;
+import org.beanmodelgraph.testcommon.model.parent.A;
 import org.junit.jupiter.api.Test;
 import org.ssio.api.interfaces.htmltable.HtmlTableSsioTemplate;
 
 import java.io.File;
 import java.io.OutputStream;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,7 +26,7 @@ public class BmgBuildAndTabulizeITCase {
     @Test
     public void buildAndTabulize() {
 
-        BeanModelGraphConstructor graphConstructor = new BeanModelGraphConstructor(A.class);
+        BeanModelGraphConstructor graphConstructor = new BeanModelGraphConstructor(A.class, new ArrayList<>());
         BeanModelGraphTabulizer graphTabulizer = new BeanModelGraphTabulizer();
 
         BmgNode rootNode = graphConstructor.construct();

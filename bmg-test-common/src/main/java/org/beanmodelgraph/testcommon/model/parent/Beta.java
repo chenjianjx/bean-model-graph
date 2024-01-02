@@ -1,4 +1,4 @@
-package org.beanmodelgraph.testcommon.model;
+package org.beanmodelgraph.testcommon.model.parent;
 
 import lombok.Getter;
 

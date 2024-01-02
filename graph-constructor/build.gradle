@@ -3,6 +3,9 @@ dependencies {
     annotationProcessor "org.projectlombok:lombok"
     implementation "commons-beanutils:commons-beanutils"
     implementation "org.slf4j:slf4j-api"
+    implementation "org.reflections:reflections"
+
+    testImplementation(project(":bmg-test-common"))
 
     testCompileOnly "org.projectlombok:lombok"
     testAnnotationProcessor "org.projectlombok:lombok"

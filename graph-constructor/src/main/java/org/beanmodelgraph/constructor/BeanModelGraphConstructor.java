@@ -1,16 +1,20 @@
 package org.beanmodelgraph.constructor;
 
 
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.beanmodelgraph.constructor.helper.AtomicTypeResolver;
+import org.beanmodelgraph.constructor.helper.InheritanceService;
 import org.beanmodelgraph.constructor.model.BmgEdge;
 import org.beanmodelgraph.constructor.model.BmgHasAEdge;
 import org.beanmodelgraph.constructor.model.BmgNode;
+import org.beanmodelgraph.constructor.model.BmgParentOfEdge;
 import org.beanmodelgraph.constructor.util.GenericsUtils;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -19,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -37,13 +42,21 @@ import java.util.stream.Collectors;
 @Slf4j
 public class BeanModelGraphConstructor {
 
-    Map<Class<?>, BmgNode> existingNodes = new HashMap<>();
+    /**
+     * a node here is not only constructed, but construction of its edges are in progress
+     */
+    Map<Class<?>, BmgNode> expandedNodes = new HashMap<>();
     private AtomicTypeResolver atomicTypeResolver = new AtomicTypeResolver();
+
+    private InheritanceService inheritanceService = new InheritanceService();
 
     private final Class<?> rootBeanClass;
 
-    public BeanModelGraphConstructor(Class<?> rootBeanClass) {
+    private List<String> subTypeScanBasePackages;
+
+    public BeanModelGraphConstructor(@NonNull Class<?> rootBeanClass, @NonNull List<String> subTypeScanBasePackages) {
         this.rootBeanClass = rootBeanClass;
+        this.subTypeScanBasePackages = subTypeScanBasePackages;
     }
 
     /**
@@ -56,48 +69,65 @@ public class BeanModelGraphConstructor {
     }
 
     private BmgNode doConstruct(Class<?> beanClass) {
-        Optional<BmgNode> existingNodeOpt = Optional.ofNullable(existingNodes.get(beanClass));
-        if (existingNodeOpt.isPresent()) {
-            return existingNodeOpt.get();
+        Optional<BmgNode> expandedNodeOpt = Optional.ofNullable(expandedNodes.get(beanClass));
+        if (expandedNodeOpt.isPresent()) {
+            return expandedNodeOpt.get();
         }
 
 
         BmgNode rootNode = new BmgNode(beanClass);
-        existingNodes.put(beanClass, rootNode);
+        expandedNodes.put(beanClass, rootNode);
 
         if (atomicTypeResolver.isAtomicType(beanClass)) {
             rootNode.setEdges(Collections.emptyList());
         } else {
-            List<PropertyDescriptor> propertyDescriptors =
-                    Arrays.stream(PropertyUtils.getPropertyDescriptors(beanClass))
-                            .sorted(
-                                    Comparator
-                                            //show atomic types first
-                                            .comparing((Function<PropertyDescriptor, Boolean>) pd ->
-                                                    !atomicTypeResolver.isAtomicType(pd.getPropertyType()))
-                                            .thenComparing(PropertyDescriptor::getName)
-                            )
-                            .collect(Collectors.toList());
-            List<BmgEdge> edges = propertyDescriptors.stream()
-                    .map(pd -> toOutgoingEdge(pd)).filter(eo -> eo.isPresent())
-                    .map(eo -> eo.get()).collect(Collectors.toList());
-            rootNode.setEdges(edges);
+            List<BmgHasAEdge> hasAEdges = getHasAEdges(beanClass);
+            List<BmgParentOfEdge> parentOfEdges = getParentOfEdges(beanClass);
+            List<BmgEdge> allEdges = new ArrayList<>();
+            allEdges.addAll(hasAEdges);
+            allEdges.addAll(parentOfEdges);
+            rootNode.setEdges(allEdges);
         }
         return rootNode;
     }
 
-    private Optional<BmgEdge> toOutgoingEdge(PropertyDescriptor pd) {
+    private <T> List<BmgParentOfEdge> getParentOfEdges(Class<T> beanClass) {
+        Set<Class<? extends T>> directSubTypes = inheritanceService.getDirectSubTypes(beanClass, subTypeScanBasePackages);
+        return directSubTypes.stream().map(subType -> BmgParentOfEdge.builder()
+                .endingNode(doConstruct(subType))
+                .build())
+                .collect(Collectors.toList());
+    }
 
-        Method getter = pd.getReadMethod();
-        if (getter == null) {
+    private List<BmgHasAEdge> getHasAEdges(Class<?> beanClass) {
+        List<PropertyDescriptor> propertyDescriptors =
+                Arrays.stream(PropertyUtils.getPropertyDescriptors(beanClass))
+                        .sorted(
+                                Comparator
+                                        //show atomic types first
+                                        .comparing((Function<PropertyDescriptor, Boolean>) pd ->
+                                                !atomicTypeResolver.isAtomicType(pd.getPropertyType()))
+                                        .thenComparing(PropertyDescriptor::getName)
+                        )
+                        .collect(Collectors.toList());
+        List<BmgHasAEdge> hasAEdges = propertyDescriptors.stream()
+                .map(pd -> toOutgoingEdge(pd)).filter(eo -> eo.isPresent())
+                .map(eo -> eo.get()).collect(Collectors.toList());
+        return hasAEdges;
+    }
+
+    private Optional<BmgHasAEdge> toOutgoingEdge(PropertyDescriptor pd) {
+
+        Optional<Method> getterOpt = Optional.ofNullable(pd.getReadMethod());
+        if (!getterOpt.isPresent()) {
             log.warn("Cannot find getter method for property {}. Will skip this property", pd.getName());
             return Optional.empty();
         }
 
         BmgHasAEdge.BmgHasAEdgeBuilder edgeBuilder = BmgHasAEdge.builder();
         edgeBuilder.propName(pd.getName());
-        edgeBuilder.collectionProp(isClassArrayOrCollection(getter.getReturnType()));
-        edgeBuilder.endingNode(doConstruct(GenericsUtils.getMethodGenericReturnType(getter)));
+        edgeBuilder.collectionProp(isClassArrayOrCollection(getterOpt.get().getReturnType()));
+        edgeBuilder.endingNode(doConstruct(GenericsUtils.getMethodGenericReturnType(getterOpt.get())));
 
         return Optional.of(edgeBuilder.build());
     }
