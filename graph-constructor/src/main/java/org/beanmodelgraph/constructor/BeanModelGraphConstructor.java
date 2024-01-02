@@ -12,13 +12,13 @@ import org.beanmodelgraph.constructor.model.BmgNode;
 import org.beanmodelgraph.constructor.model.BmgParentOfEdge;
 import org.beanmodelgraph.constructor.traverse.BmgDfsTraverser;
 import org.beanmodelgraph.constructor.traverse.BmgNodeDfsListener;
+import org.beanmodelgraph.constructor.util.CollectionTypeUtils;
 import org.beanmodelgraph.constructor.util.GenericsUtils;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -134,14 +134,10 @@ public class BeanModelGraphConstructor {
         BmgHasAEdge.BmgHasAEdgeBuilder edgeBuilder = BmgHasAEdge.builder();
         edgeBuilder.propName(pd.getName());
 
-        edgeBuilder.collectionProp(isClassArrayOrCollection(getter.getReturnType()));
+        edgeBuilder.collectionProp(CollectionTypeUtils.isClassArrayOrCollection(getter.getReturnType()));
         edgeBuilder.endingNode(doConstruct(GenericsUtils.getMethodGenericReturnType(getter)));
 
         return Optional.of(edgeBuilder.build());
-    }
-
-    private boolean isClassArrayOrCollection(Class<?> clazz) {
-        return clazz.isArray() || Collection.class.isAssignableFrom(clazz);
     }
 
     private void removeUnnecessaryHasAEdges(BmgNode rootNode) {

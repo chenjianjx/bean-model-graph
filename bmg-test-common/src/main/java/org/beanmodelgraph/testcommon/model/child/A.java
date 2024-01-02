@@ -6,6 +6,7 @@ import org.beanmodelgraph.testcommon.model.parent.Beta;
 import org.beanmodelgraph.testcommon.model.parent.IA;
 
 import java.util.List;
+import java.util.Map;
 
 @Getter
 public class A implements IA {
@@ -14,5 +15,7 @@ public class A implements IA {
     private B b2;
     private List<Beta> betaList;
     private List<Beta> betaArray;
+
+    private Map<B, Beta> someMap;
 
 }

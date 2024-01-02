@@ -17,14 +17,14 @@ public class GenericsUtils {
     }
 
 
-    static Class<?> chooseOneType(Class<?> literalType, Type genericType) {
+    private static Class<?> chooseOneType(Class<?> literalType, Type genericType) {
         if (genericType instanceof ParameterizedType) {
             return digFromGenericType(genericType);
         }
         return literalType;
     }
 
-    static Class<?> digFromGenericType(Type genericType) {
+    private static Class<?> digFromGenericType(Type genericType) {
         Type[] typeArguments = ((ParameterizedType) genericType).getActualTypeArguments();
         Type type = typeArguments[0];
         if (type instanceof ParameterizedType) {
