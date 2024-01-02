@@ -6,6 +6,8 @@ import org.beanmodelgraph.constructor.model.BmgNode;
 import org.beanmodelgraph.tabulizer.BeanModelGraphTabulizer;
 import org.beanmodelgraph.tabulizer.integrationtest.model.BmgRowViewObject;
 import org.beanmodelgraph.tabulizer.model.BmgRow;
+import org.beanmodelgraph.tabulizer.render.BmgRowPathRenderer;
+import org.beanmodelgraph.tabulizer.render.DefaultBmgRowPathRenderer;
 import org.beanmodelgraph.testcommon.model.child.ChildPackageAnchor;
 import org.beanmodelgraph.testcommon.model.parent.IA;
 import org.junit.jupiter.api.Test;
@@ -22,6 +24,7 @@ import static org.beanmodelgraph.testcommon.support.BmgITHelper.createSpreadshee
 
 public class BmgBuildAndTabulizeITCase {
 
+    BmgRowPathRenderer rowPathRenderer = new DefaultBmgRowPathRenderer();
 
     @SneakyThrows
     @Test
@@ -34,12 +37,18 @@ public class BmgBuildAndTabulizeITCase {
         BmgNode rootNode = graphConstructor.construct();
         List<BmgRow> rows = graphTabulizer.toRows(rootNode, true);
 
-        List<BmgRowViewObject> viewObjects = rows.stream().map(BmgRowViewObject::fromBizObject).collect(Collectors.toList());
+        List<BmgRowViewObject> viewObjects = rows.stream().map(this::fromBizObject).collect(Collectors.toList());
 
         File tableFile = createSpreadsheetFile(this.getClass().getSimpleName(), "html");
         try (OutputStream outputStream = Files.newOutputStream(tableFile.toPath())) {
             HtmlTableSsioTemplate.defaultInstance().toHtmlPage(viewObjects, BmgRowViewObject.class, outputStream, "utf8", false);
         }
+    }
+
+    private BmgRowViewObject fromBizObject(BmgRow bo) {
+        return BmgRowViewObject.builder()
+                .propertyPath(rowPathRenderer.render(bo.getPath()))
+                .typeSimpleName(bo.getType().getSimpleName()).build();
     }
 
 }
