@@ -47,18 +47,16 @@ subprojects {
         def slf4jVersion = "1.7.36"
 
         dependencies {
-            //TODO: clean up deps
-            // dependency "commons-io:commons-io:2.15.1"
-            // dependency "org.apache.commons:commons-lang3:3.14.0"
             dependency "commons-beanutils:commons-beanutils:1.9.4"
             dependency "org.slf4j:slf4j-api:${slf4jVersion}"
             dependency 'org.projectlombok:lombok:1.18.30'
 
             dependency 'org.junit.jupiter:junit-jupiter:5.10.1'
-            //  dependency 'org.mockito:mockito-core:3.12.4'
             dependency "org.slf4j:slf4j-simple:${slf4jVersion}"
             dependency 'com.github.chenjianjx.ssio:ssio-ext-html-table:2.0.0'
             dependency 'org.reflections:reflections:0.10.2'
+
+            dependency 'com.paypal.sdk:rest-api-sdk:1.14.0'
         }
     }
 
