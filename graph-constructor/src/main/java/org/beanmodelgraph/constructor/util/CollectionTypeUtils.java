@@ -5,12 +5,17 @@ import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Collection;
+import java.util.Map;
 import java.util.Optional;
 
 public class CollectionTypeUtils {
 
     public static boolean isClassArrayOrCollection(Class<?> clazz) {
         return clazz.isArray() || Collection.class.isAssignableFrom(clazz);
+    }
+
+    public static boolean isMap(Class<?> clazz){
+        return Map.class.isAssignableFrom(clazz);
     }
 
     public static Class<?> getMethodGenericReturnTypeIfArrayOrCollection(Method method) {

@@ -6,6 +6,7 @@ import org.beanmodelgraph.testcommon.model.parent.Beta;
 import org.beanmodelgraph.testcommon.model.parent.IA;
 
 import java.util.List;
+import java.util.Map;
 
 @Getter
 public class A implements IA {
@@ -16,10 +17,11 @@ public class A implements IA {
     private List<Beta> mmmBetaList;
     private Beta[] mmmBetaArray;
 
+    private Map<String, Float> someMap;
+
     private List<List<Beta>> zzzListOfBetaList;
     private List<Beta[]> zzzListOfBetaArray;
     private List<Beta>[] zzzArrayOfBetaList;
     private Beta[][] zzzArrayOfBetaArray;
-
 
 }

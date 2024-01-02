@@ -82,7 +82,10 @@ public class BeanModelGraphConstructor {
         BmgNode rootNode = new BmgNode(beanClass);
         expandedNodes.put(beanClass, rootNode);
 
-        if (atomicTypeResolver.isAtomicType(beanClass) || CollectionTypeUtils.isClassArrayOrCollection(beanClass)) {
+        if (atomicTypeResolver.isAtomicType(beanClass)
+                || CollectionTypeUtils.isClassArrayOrCollection(beanClass)
+                || CollectionTypeUtils.isMap(beanClass)
+        ) {
             rootNode.setEdges(Collections.emptyList());
         } else {
             List<BmgHasAEdge> hasAEdges = getHasAEdges(beanClass);
