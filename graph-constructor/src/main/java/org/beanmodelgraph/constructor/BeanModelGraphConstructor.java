@@ -32,21 +32,30 @@ import java.util.stream.Collectors;
  * <p>
  * <p>
  * <p>
- * Thread-safety:  not safe
+ * Thread-safety:  not safe, one-time use
  */
 @Slf4j
 public class BeanModelGraphConstructor {
 
-    private Map<Class<?>, BmgNode> existingNodes = new HashMap<>();
+    Map<Class<?>, BmgNode> existingNodes = new HashMap<>();
     private AtomicTypeResolver atomicTypeResolver = new AtomicTypeResolver();
+
+    private final Class<?> rootBeanClass;
+
+    public BeanModelGraphConstructor(Class<?> rootBeanClass) {
+        this.rootBeanClass = rootBeanClass;
+    }
 
     /**
      * construct a graph.
      *
-     * @param beanClass
      * @return The root node of this graph
      */
-    public BmgNode constructFromBeanClass(Class<?> beanClass) {
+    public BmgNode construct() {
+        return doConstruct(rootBeanClass);
+    }
+
+    private BmgNode doConstruct(Class<?> beanClass) {
         Optional<BmgNode> existingNodeOpt = Optional.ofNullable(existingNodes.get(beanClass));
         if (existingNodeOpt.isPresent()) {
             return existingNodeOpt.get();
@@ -75,8 +84,6 @@ public class BeanModelGraphConstructor {
             rootNode.setEdges(edges);
         }
         return rootNode;
-
-
     }
 
     private Optional<BmgEdge> toOutgoingEdge(PropertyDescriptor pd) {
@@ -89,7 +96,7 @@ public class BeanModelGraphConstructor {
 
         BmgHasAEdge.BmgHasAEdgeBuilder edgeBuilder = BmgHasAEdge.builder();
         edgeBuilder.propName(pd.getName());
-        edgeBuilder.endingNode(constructFromBeanClass(GenericsUtils.getMethodGenericReturnType(getter)));
+        edgeBuilder.endingNode(doConstruct(GenericsUtils.getMethodGenericReturnType(getter)));
 
         return Optional.of(edgeBuilder.build());
     }
