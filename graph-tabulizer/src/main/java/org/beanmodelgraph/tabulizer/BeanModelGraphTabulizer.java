@@ -30,7 +30,8 @@ public class BeanModelGraphTabulizer {
         NodeToRowListener nodeListener = new NodeToRowListener();
         BmgDfsTraverser traverser = new BmgDfsTraverser(nodeListener);
         traverser.traverse(rootNode);
-        return nodeListener.getRows();
+        List<BmgRow> rows = nodeListener.getRows();
+        return rows.subList(1, rows.size()); //first row is for the root bean and it's meaningless. So remove it
     }
 
 }

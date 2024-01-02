@@ -9,6 +9,6 @@ dependencies {
     testImplementation "com.github.chenjianjx.ssio:ssio-ext-html-table"
     testCompileOnly "org.projectlombok:lombok"
     testAnnotationProcessor "org.projectlombok:lombok"
-
+    testRuntimeOnly "org.slf4j:slf4j-simple"
 
 }
