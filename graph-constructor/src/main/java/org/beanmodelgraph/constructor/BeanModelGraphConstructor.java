@@ -73,8 +73,8 @@ public class BeanModelGraphConstructor {
                             .sorted(
                                     Comparator
                                             //show atomic types first
-                                            .comparing((Function<PropertyDescriptor, Boolean>) pd1 ->
-                                                    !atomicTypeResolver.isAtomicType(pd1.getPropertyType()))
+                                            .comparing((Function<PropertyDescriptor, Boolean>) pd ->
+                                                    !atomicTypeResolver.isAtomicType(pd.getPropertyType()))
                                             .thenComparing(PropertyDescriptor::getName)
                             )
                             .collect(Collectors.toList());
@@ -96,6 +96,7 @@ public class BeanModelGraphConstructor {
 
         BmgHasAEdge.BmgHasAEdgeBuilder edgeBuilder = BmgHasAEdge.builder();
         edgeBuilder.propName(pd.getName());
+        edgeBuilder.collectionProp(isClassArrayOrCollection(getter.getReturnType()));
         edgeBuilder.endingNode(doConstruct(GenericsUtils.getMethodGenericReturnType(getter)));
 
         return Optional.of(edgeBuilder.build());
