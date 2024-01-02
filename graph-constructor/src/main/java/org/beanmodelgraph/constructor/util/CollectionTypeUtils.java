@@ -20,21 +20,19 @@ public class CollectionTypeUtils {
             return componentType.isPresent() ? componentType.get() : Object.class;
         } else if (genericReturnType instanceof GenericArrayType) {//array of non-raw collection
             Type componentType = ((GenericArrayType) genericReturnType).getGenericComponentType();
-            return extractRawType(componentType);
+            return convertToRawType(componentType);
         } else if (genericReturnType instanceof ParameterizedType) { //non-raw collection
             Type[] typeArguments = ((ParameterizedType) genericReturnType).getActualTypeArguments();
-            return extractRawType(typeArguments[0]);
+            return convertToRawType(typeArguments[0]);
         } else {
             throw new UnsupportedOperationException(genericReturnType.getClass().getName());
         }
     }
 
-    private static Class<?> extractRawType(Type type) {
+    private static Class<?> convertToRawType(Type type) {
         if (type instanceof Class) {
             return (Class<?>) type;
-        } else if (type instanceof GenericArrayType) {
-            return (Class<?>) ((ParameterizedType) type).getRawType();
-        } else if (type instanceof ParameterizedType) {
+        }  else if (type instanceof ParameterizedType) {
             return (Class<?>) ((ParameterizedType) type).getRawType();
         } else {
             throw new UnsupportedOperationException(type.getClass().getName());
