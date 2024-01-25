@@ -1,0 +1,14 @@
+dependencies {
+    api(project(":graph-constructor"))
+    //implementation "org.slf4j:slf4j-api"
+    compileOnly "org.projectlombok:lombok"
+    annotationProcessor "org.projectlombok:lombok"
+
+    testImplementation(project(":bmg-test-common"))
+    testImplementation "org.junit.jupiter:junit-jupiter"
+    testCompileOnly "org.projectlombok:lombok"
+    testAnnotationProcessor "org.projectlombok:lombok"
+    //testRuntimeOnly "org.slf4j:slf4j-simple"
+    //testImplementation "com.paypal.sdk:rest-api-sdk"
+
+}

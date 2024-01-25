@@ -1,3 +1,4 @@
 include "graph-constructor"
-include "graph-tabulizer"
 include "bmg-test-common"
+include "graph-tabulizer"
+include "graph-drawer"
