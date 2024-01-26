@@ -30,7 +30,7 @@ public class DefaultBmgRowPathRenderer implements BmgRowPathRenderer {
         return result;
     }
 
-    private String extractPropName(BmgHasAEdge edge) {
+    private String extractPropName(BmgHasAEdge edge) { //TODO: put this into some common place
         return edge.getPropName()
                 +
                 (edge.isMultiOccur() ? "[]" : "");

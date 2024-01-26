@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 
 
-public class PaypalModelITCase extends BmgBuildAndTabulizeITCaseBase {
+public class TabulizerPaypalModelITCase extends BmgBuildAndTabulizeITCaseBase {
 
     public Class<?> getRootBeanClass() {
         return Payment.class;

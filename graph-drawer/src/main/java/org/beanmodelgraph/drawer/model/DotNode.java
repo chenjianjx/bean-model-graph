@@ -4,5 +4,8 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class DotNode {
+    private String name;
     private String label;
+
+
 }
