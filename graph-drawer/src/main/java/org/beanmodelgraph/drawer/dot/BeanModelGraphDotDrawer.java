@@ -29,7 +29,12 @@ public class BeanModelGraphDotDrawer {
 
     public String toDotScript(@NonNull BmgNode rootNode) {
         DotGraph dg = toDotGraph(rootNode);
-        return dotGraphRenderer.render(dg);
+        return dotGraphRenderer.render(dg, Optional.empty());
+    }
+
+    public String toDotScript(@NonNull BmgNode rootNode, @NonNull Optional<DotGraphRenderer.RenderOptions> renderOptions) {
+        DotGraph dg = toDotGraph(rootNode);
+        return dotGraphRenderer.render(dg, renderOptions);
     }
 
     public DotGraph toDotGraph(@NonNull BmgNode rootNode) {

@@ -9,6 +9,7 @@ import org.beanmodelgraph.drawer.dot.render.DotGraphRenderer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import static org.beanmodelgraph.constructor.util.BmgStringUtils.doubleQuote;
 import static org.beanmodelgraph.constructor.util.BmgStringUtils.join;
@@ -20,7 +21,7 @@ public class DefaultDotGraphRenderer implements DotGraphRenderer {
     private static final String INDENT = "    ";
 
     @Override
-    public String render(@NonNull DotGraph dotGraph) {
+    public String render(@NonNull DotGraph dotGraph, @NonNull Optional<RenderOptions> renderOptions) {
         StringBuilder sb = new StringBuilder();
         appendNewLine(sb, "digraph {");
         appendNewLine(sb);
