@@ -14,8 +14,8 @@ import org.ssio.api.interfaces.htmltable.HtmlTableSsioTemplate;
 import java.io.File;
 import java.io.OutputStream;
 import java.nio.file.Files;
-import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.beanmodelgraph.testcommon.support.BmgITHelper.createSpreadsheetFile;
@@ -29,11 +29,14 @@ public abstract class BmgBuildAndTabulizeITCaseBase {
 
     public abstract List<String> getSubTypeScanBasePackages();
 
+    public abstract Set<Class<?>> getAdditionalAtomicTypes();
+
+
     @Test
     @SneakyThrows
     public void buildAndTabulize() {
         BeanModelGraphConstructor graphConstructor = new BeanModelGraphConstructor(getRootBeanClass(),
-                getSubTypeScanBasePackages(), new HashSet<>());
+                getSubTypeScanBasePackages(), getAdditionalAtomicTypes());
         BeanModelGraphTabulizer graphTabulizer = new BeanModelGraphTabulizer();
 
         BmgNode rootNode = graphConstructor.construct();
@@ -46,6 +49,7 @@ public abstract class BmgBuildAndTabulizeITCaseBase {
             HtmlTableSsioTemplate.defaultInstance().toHtmlPage(viewObjects, BmgRowViewObject.class, outputStream, "utf8", false);
         }
     }
+
 
     private BmgRowViewObject fromBizObject(BmgRow bo) {
         return BmgRowViewObject.builder()
