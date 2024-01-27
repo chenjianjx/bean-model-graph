@@ -10,6 +10,6 @@ dependencies {
     testCompileOnly "org.projectlombok:lombok"
     testAnnotationProcessor "org.projectlombok:lombok"
     testRuntimeOnly "org.slf4j:slf4j-simple"
-    testImplementation "com.paypal.sdk:rest-api-sdk"
+
 
 }

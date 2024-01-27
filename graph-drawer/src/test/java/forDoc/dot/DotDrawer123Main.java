@@ -1,4 +1,4 @@
-package forDoc;
+package forDoc.dot;
 
 import forDoc.model.One;
 import forDoc.model.OneTwoThreePackageAnchor;

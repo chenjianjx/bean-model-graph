@@ -135,7 +135,7 @@ public class BeanModelGraphConstructor {
             log.warn("Cannot find getter method for property {}.{}. Will skip this property", beanClass.getSimpleName(), pd.getName());
             return Optional.empty();
         }else {
-            log.info("Build {} edge for property {}.{}", BmgEdgeColor.HAS_A, beanClass.getSimpleName(), pd.getName());
+            log.debug("Build {} edge for property {}.{}", BmgEdgeColor.HAS_A, beanClass.getSimpleName(), pd.getName());
         }
 
 
@@ -194,7 +194,7 @@ public class BeanModelGraphConstructor {
                             .filter(pd -> pd.getName().equals(edge.getPropName()))
                             .findFirst().get().getReadMethod();
             if (inheritanceService.isMethodInheritedFrom(prevNodeBeanClass, getter, allClassesInGraph)) {
-                log.info("Remove edge {}.{} because the property is inherited", prevNodeBeanClass.getSimpleName(), edge.getPropName());
+                log.debug("Remove edge {}.{} because the property is inherited", prevNodeBeanClass.getSimpleName(), edge.getPropName());
                 prevNode.removeEdge(edge);
             }
 

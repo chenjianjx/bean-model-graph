@@ -8,35 +8,39 @@ import org.beanmodelgraph.tabulizer.integrationtest.model.BmgRowViewObject;
 import org.beanmodelgraph.tabulizer.model.BmgRow;
 import org.beanmodelgraph.tabulizer.render.BmgRowPathRenderer;
 import org.beanmodelgraph.tabulizer.render.DefaultBmgRowPathRenderer;
-import org.junit.jupiter.api.Test;
+import org.beanmodelgraph.testcommon.testdata.ConstructorTestParam;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.ssio.api.interfaces.htmltable.HtmlTableSsioTemplate;
 
 import java.io.File;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.beanmodelgraph.testcommon.support.BmgITHelper.createSpreadsheetFile;
 
-public abstract class BmgBuildAndTabulizeITCaseBase {
+public class BmgBuildAndTabulizeITCase {
 
     BmgRowPathRenderer rowPathRenderer = new DefaultBmgRowPathRenderer();
 
 
-    public abstract Class<?> getRootBeanClass();
+    static Stream<Arguments> paramProvider() {
+        return Stream.of(
+                Arguments.of(ConstructorTestParam.AbcTestParam),
+                Arguments.of(ConstructorTestParam.PaypalTestParam)
+        );
+    }
 
-    public abstract List<String> getSubTypeScanBasePackages();
-
-    public abstract Set<Class<?>> getAdditionalAtomicTypes();
-
-
-    @Test
+    @ParameterizedTest
+    @MethodSource("paramProvider")
     @SneakyThrows
-    public void buildAndTabulize() {
-        BeanModelGraphConstructor graphConstructor = new BeanModelGraphConstructor(getRootBeanClass(),
-                getSubTypeScanBasePackages(), getAdditionalAtomicTypes());
+    public void buildAndTabulize(ConstructorTestParam param) {
+        BeanModelGraphConstructor graphConstructor = new BeanModelGraphConstructor(param.getRootBeanClass(),
+                param.getSubTypeScanBasePackages(), param.getAdditionalAtomicTypes());
         BeanModelGraphTabulizer graphTabulizer = new BeanModelGraphTabulizer();
 
         BmgNode rootNode = graphConstructor.construct();
