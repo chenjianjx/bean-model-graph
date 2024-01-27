@@ -79,7 +79,7 @@ public class BeanModelGraphConstructor {
 
         return BmgGraph.builder()
                 .rootNode(rootNode)
-                .additionalAtomicTypes(Collections.unmodifiableSet(this.additionalAtomicTypes)).build();
+                .build();
     }
 
 
@@ -89,11 +89,12 @@ public class BeanModelGraphConstructor {
             return expandedNodeOpt.get();
         }
 
-
-        BmgNode rootNode = new BmgNode(beanClass);
+        boolean atomicType = atomicTypeResolver.isAtomicType(beanClass);
+        BmgNode rootNode = new BmgNode(beanClass, atomicType);
         expandedNodes.put(beanClass, rootNode);
 
-        if (atomicTypeResolver.isAtomicType(beanClass)
+
+        if (atomicType
                 || CollectionTypeUtils.isClassArrayOrCollection(beanClass)
                 || CollectionTypeUtils.isMap(beanClass)
         ) {

@@ -16,13 +16,16 @@ public class BmgNode {
 
     private final Class<?> beanClass;
 
-    public BmgNode(@NonNull Class<?> beanClass) {
-        this.beanClass = beanClass;
-    }
-
     @NonNull
     @Setter
     private List<BmgEdge> edges;
+
+    private boolean atomicType;
+
+    public BmgNode(@NonNull Class<?> beanClass, boolean atomicType) {
+        this.beanClass = beanClass;
+        this.atomicType = atomicType;
+    }
 
     /**
      * Only equals if the same object

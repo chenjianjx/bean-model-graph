@@ -27,32 +27,29 @@ public class DefaultDotGraphRenderer implements DotGraphRenderer {
         appendNewLine(sb, INDENT + "node [shape=rectangle, style=rounded];");
         appendNewLine(sb);
 
-        dotGraph.getNodes().stream().filter(node -> shouldRetainNode(dotGraph, node, options))
+        dotGraph.getNodes().stream().filter(node -> shouldRetainNode(node, options))
                 .forEach(node -> appendNewLine(sb, renderNode(node)));
 
         appendNewLine(sb);
         appendNewLine(sb);
 
-        dotGraph.getEdges().stream().filter(edge -> shouldRetainEdge(dotGraph, edge, options))
+        dotGraph.getEdges().stream().filter(edge -> shouldRetainEdge(edge, options))
                 .forEach(edge -> appendNewLine(sb, renderEdge(edge)));
-        
+
         appendNewLine(sb);
         sb.append("}");
         return sb.toString();
     }
 
-    private static boolean shouldRetainNode(DotGraph dotGraph, DotNode node, Optional<RenderOptions> options) {
+    private static boolean shouldRetainNode(DotNode node, Optional<RenderOptions> options) {
         boolean hideAtomicTypes = options.isPresent() && options.get().isHideAtomicTypes();
-        return hideAtomicTypes ? isNodeBeanClassNonAtomic(dotGraph, node) : true;
+        return hideAtomicTypes ? !node.isAtomicType() : true;
     }
 
-    private static boolean shouldRetainEdge(DotGraph dotGraph, DotEdge edge, Optional<RenderOptions> options) {
-        return shouldRetainNode(dotGraph, edge.getSource(), options) && shouldRetainNode(dotGraph, edge.getTarget(), options);
+    private static boolean shouldRetainEdge(DotEdge edge, Optional<RenderOptions> options) {
+        return shouldRetainNode(edge.getSource(), options) && shouldRetainNode(edge.getTarget(), options);
     }
 
-    private static boolean isNodeBeanClassNonAtomic(DotGraph dotGraph, DotNode node) {
-        return !dotGraph.getAdditionalAtomicTypes().contains(node.getBeanClass());
-    }
 
     private String renderEdge(DotEdge edge) {
         StringBuilder line = new StringBuilder();

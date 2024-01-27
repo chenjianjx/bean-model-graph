@@ -77,6 +77,7 @@ public class BmgNodeToDotNodeListener implements BmgNodeDfsListener {
                 .name(bmgNode.getBeanClass().getSimpleName())
                 .label(Optional.empty())
                 .beanClass(bmgNode.getBeanClass())
+                .atomicType(bmgNode.isAtomicType())
                 .build();
         return dn;
     }

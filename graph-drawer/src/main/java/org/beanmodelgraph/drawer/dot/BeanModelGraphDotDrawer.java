@@ -8,7 +8,6 @@ import org.beanmodelgraph.drawer.dot.model.DotGraph;
 import org.beanmodelgraph.drawer.dot.model.DotNode;
 import org.beanmodelgraph.drawer.dot.render.DotGraphRenderer;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -48,7 +47,6 @@ public class BeanModelGraphDotDrawer {
         DotGraph dg = DotGraph.builder()
                 .nodes(nodeListener.getDotNodes())
                 .edges(nodeListener.getDotEdges())
-                .additionalAtomicTypes(Collections.unmodifiableSet(bmgGraph.getAdditionalAtomicTypes()))
                 .build();
         return dg;
     }

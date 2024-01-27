@@ -5,7 +5,6 @@ import lombok.NonNull;
 import lombok.Value;
 
 import java.util.List;
-import java.util.Set;
 
 @Value
 @Builder
@@ -16,8 +15,4 @@ public class DotGraph {
     @NonNull
     private List<DotEdge> edges;
 
-    /******Non-dot properties*******/
-
-    @NonNull
-    private Set<Class<?>> additionalAtomicTypes;
 }
