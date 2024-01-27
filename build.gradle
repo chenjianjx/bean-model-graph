@@ -57,6 +57,7 @@ subprojects {
             dependency 'org.reflections:reflections:0.10.2'
 
             dependency 'com.paypal.sdk:rest-api-sdk:1.14.0'
+            dependency 'org.mockito:mockito-core:4.2.0'
         }
     }
 

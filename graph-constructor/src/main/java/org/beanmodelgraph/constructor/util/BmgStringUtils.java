@@ -2,6 +2,7 @@ package org.beanmodelgraph.constructor.util;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 import java.util.Collection;
 
@@ -11,11 +12,7 @@ public class BmgStringUtils {
         return "\"" + s + "\"";
     }
 
-    public static String join(Collection<String> strings, String delimiter) {
-        if (strings == null || strings.isEmpty()) {
-            return "";
-        }
-
+    public static String join(@NonNull Collection<String> strings, String delimiter) {
         StringBuilder sb = new StringBuilder();
         boolean first = true;
 
