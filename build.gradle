@@ -25,7 +25,7 @@ allprojects {
 subprojects {
 
     group = 'com.github.chenjianjx.beanmodelgraph'
-    version = '0.1.0-SNAPSHOT'
+    version = '1.0.0-SNAPSHOT'
 
     apply plugin: 'java-library'
     apply plugin: 'io.spring.dependency-management'
@@ -98,7 +98,7 @@ subprojects {
                 }
                 pom {
                     name = "${project.name}"
-                    description = 'From a javabean class build a property dependency graph - ${project.name}'
+                    description = "Bean model graph - ${project.name}"
                     url = "https://github.com/chenjianjx/bean-model-graph/${project.name}"
 
                     scm {
