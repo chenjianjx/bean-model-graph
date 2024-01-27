@@ -1,7 +1,11 @@
 package org.beanmodelgraph.constructor.util;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
 import java.util.Collection;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class BmgStringUtils {
     public static String doubleQuote(String s) {
         return "\"" + s + "\"";

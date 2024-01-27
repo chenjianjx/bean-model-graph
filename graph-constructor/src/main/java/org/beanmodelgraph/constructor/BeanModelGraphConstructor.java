@@ -176,7 +176,7 @@ public class BeanModelGraphConstructor {
 
         @Override
         public void onNode(List<BmgEdge> pathOfThisNode, BmgNode node, Optional<BmgNode> prevNodeOpt) {
-            if (pathOfThisNode.isEmpty() || !prevNodeOpt.isPresent()) {
+            if (!prevNodeOpt.isPresent()) {
                 return;
             }
 

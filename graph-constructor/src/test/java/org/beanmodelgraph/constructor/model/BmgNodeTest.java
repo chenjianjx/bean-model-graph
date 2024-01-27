@@ -19,12 +19,9 @@ class BmgNodeTest {
     @Test
     public void nonNullTest_nullType() {
         Assertions.assertThrows(NullPointerException.class, () ->
-                {
-                    new BmgNode(null);
-                }
+                new BmgNode(null)
         );
     }
-
 
     @Test
     public void nonNullTest_nullEdges() {

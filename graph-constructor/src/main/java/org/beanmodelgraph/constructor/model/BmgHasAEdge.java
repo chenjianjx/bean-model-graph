@@ -20,23 +20,9 @@ public class BmgHasAEdge extends BmgEdge {
     private String propName;
     private boolean multiOccur;
 
-
     @Override
     public BmgEdgeColor getColor() {
         return BmgEdgeColor.HAS_A;
-    }
-
-    /**
-     * Only equals if the same object
-     */
-    @Override
-    public boolean equals(Object obj) {
-        return this == obj;
-    }
-
-    @Override
-    public int hashCode() {
-        return super.hashCode();
     }
 
     public String simpleDisplay() {

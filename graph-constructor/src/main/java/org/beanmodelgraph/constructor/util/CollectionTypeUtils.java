@@ -1,5 +1,8 @@
 package org.beanmodelgraph.constructor.util;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -8,6 +11,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CollectionTypeUtils {
 
     public static boolean isClassArrayOrCollection(Class<?> clazz) {
