@@ -49,7 +49,7 @@ public class BmgNodeToDotNodeListener implements BmgNodeDfsListener {
         if (bmgEdge instanceof BmgHasAEdge) {
             builder.source(findOrCreateDotNode(prevBmgNode))
                     .target(findOrCreateDotNode(bmgEdge.getEndingNode()))
-                    .label(Optional.of(extractPropName((BmgHasAEdge) bmgEdge)))
+                    .label(Optional.of(((BmgHasAEdge) bmgEdge).simpleDisplay()))
                     .arrowhead("vee")
                     .style("solid");
         } else if (bmgEdge instanceof BmgParentOfEdge) {
@@ -66,7 +66,6 @@ public class BmgNodeToDotNodeListener implements BmgNodeDfsListener {
     }
 
 
-
     private DotNode toDotNode(BmgNode bmgNode) {
         DotNode dn = DotNode.builder()
                 .name(bmgNode.getBeanClass().getSimpleName())
@@ -74,12 +73,6 @@ public class BmgNodeToDotNodeListener implements BmgNodeDfsListener {
                 .beanClass(bmgNode.getBeanClass())
                 .build();
         return dn;
-    }
-
-    private String extractPropName(BmgHasAEdge edge) { //TODO: put this into some common place
-        return edge.getPropName()
-                +
-                (edge.isMultiOccur() ? "[]" : "");
     }
 
 }

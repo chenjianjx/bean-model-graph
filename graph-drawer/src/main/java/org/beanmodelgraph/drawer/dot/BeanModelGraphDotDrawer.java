@@ -13,6 +13,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static org.beanmodelgraph.constructor.util.BmgStringUtils.doubleQuote;
+
 /**
  * Can be used as singleton
  */
@@ -48,7 +50,7 @@ public class BeanModelGraphDotDrawer {
                         nodes.forEach(node ->
                                 {
                                     node.setLabel(Optional.of(node.getBeanClass().getName()));
-                                    node.setName("\"" + node.getBeanClass().getName() + "\""); //TODO: use doubleQuote
+                                    node.setName(doubleQuote(node.getBeanClass().getName()));
                                 }
                         )
                 );

@@ -15,7 +15,7 @@ public class DefaultBmgRowPathRenderer implements BmgRowPathRenderer {
         StringBuilder resultBuilder = new StringBuilder();
         for (BmgEdge edge : path) {
             if (edge instanceof BmgHasAEdge) {
-                resultBuilder.append(".").append(extractPropName((BmgHasAEdge) edge));
+                resultBuilder.append(".").append(((BmgHasAEdge) edge).simpleDisplay());
             } else if (edge instanceof BmgParentOfEdge) {
                 resultBuilder.append("<").append(edge.getEndingNode().getBeanClass().getSimpleName()).append(">");
             } else {
@@ -28,11 +28,5 @@ public class DefaultBmgRowPathRenderer implements BmgRowPathRenderer {
             result = result + ".";  //works for root node and its PARENT_OF ending nodes
         }
         return result;
-    }
-
-    private String extractPropName(BmgHasAEdge edge) { //TODO: put this into some common place
-        return edge.getPropName()
-                +
-                (edge.isMultiOccur() ? "[]" : "");
     }
 }

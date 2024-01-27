@@ -38,4 +38,8 @@ public class BmgHasAEdge extends BmgEdge {
     public int hashCode() {
         return super.hashCode();
     }
+
+    public String simpleDisplay() {
+        return this.getPropName() + (this.isMultiOccur() ? "[]" : "");
+    }
 }

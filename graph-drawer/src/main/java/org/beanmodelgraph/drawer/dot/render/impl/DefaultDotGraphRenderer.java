@@ -10,6 +10,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import static org.beanmodelgraph.constructor.util.BmgStringUtils.doubleQuote;
+import static org.beanmodelgraph.constructor.util.BmgStringUtils.join;
+
 /**
  * stateless
  */
@@ -50,24 +53,7 @@ public class DefaultDotGraphRenderer implements DotGraphRenderer {
         return line.toString();
     }
 
-    private String join(Collection<String> strings, String delimiter) { //TODO: put in util
-        if (strings == null || strings.isEmpty()) {
-            return "";
-        }
 
-        StringBuilder sb = new StringBuilder();
-        boolean first = true;
-
-        for (String str : strings) {
-            if (!first) {
-                sb.append(delimiter);
-            }
-            sb.append(str);
-            first = false;
-        }
-
-        return sb.toString();
-    }
 
 
     private String renderNode(DotNode node) {
@@ -87,7 +73,5 @@ public class DefaultDotGraphRenderer implements DotGraphRenderer {
         sb.append("\n");
     }
 
-    private String doubleQuote(String s) { //TODO: move this to common util
-        return "\"" + s + "\"";
-    }
+
 }
