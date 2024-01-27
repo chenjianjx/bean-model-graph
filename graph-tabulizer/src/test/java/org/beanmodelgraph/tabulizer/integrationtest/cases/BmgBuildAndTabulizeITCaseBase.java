@@ -14,6 +14,7 @@ import org.ssio.api.interfaces.htmltable.HtmlTableSsioTemplate;
 import java.io.File;
 import java.io.OutputStream;
 import java.nio.file.Files;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,7 +33,7 @@ public abstract class BmgBuildAndTabulizeITCaseBase {
     @SneakyThrows
     public void buildAndTabulize() {
         BeanModelGraphConstructor graphConstructor = new BeanModelGraphConstructor(getRootBeanClass(),
-                getSubTypeScanBasePackages());
+                getSubTypeScanBasePackages(), new HashSet<>());
         BeanModelGraphTabulizer graphTabulizer = new BeanModelGraphTabulizer();
 
         BmgNode rootNode = graphConstructor.construct();

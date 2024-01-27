@@ -8,12 +8,14 @@ import org.beanmodelgraph.drawer.dot.BeanModelGraphDotDrawer;
 import org.beanmodelgraph.drawer.dot.render.impl.DefaultDotGraphRenderer;
 
 import java.util.Arrays;
+import java.util.HashSet;
 
 public class DotDrawer123Main {
 
     public static void main(String[] args) {
         BeanModelGraphConstructor graphConstructor = new BeanModelGraphConstructor(One.class,
-                Arrays.asList(OneTwoThreePackageAnchor.class.getPackage().getName()));
+                Arrays.asList(OneTwoThreePackageAnchor.class.getPackage().getName()),
+                new HashSet<>());
         BeanModelGraphDotDrawer dotDrawer = new BeanModelGraphDotDrawer(new DefaultDotGraphRenderer());
 
         BmgNode rootNode = graphConstructor.construct();

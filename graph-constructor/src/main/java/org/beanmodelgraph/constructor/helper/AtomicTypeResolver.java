@@ -1,5 +1,7 @@
 package org.beanmodelgraph.constructor.helper;
 
+import lombok.NonNull;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDate;
@@ -14,6 +16,12 @@ import java.util.Set;
 public class AtomicTypeResolver {
 
     private static Set<Class<?>> defaultAtomicTypes = new HashSet<>();
+    private final Set<Class<?>> allAtomicTypes = new HashSet<>();
+
+    public AtomicTypeResolver(@NonNull Set<Class<?>> additionalAtomicTypes) {
+        this.allAtomicTypes.addAll(defaultAtomicTypes);
+        this.allAtomicTypes.addAll(additionalAtomicTypes);
+    }
 
     static {
         defaultAtomicTypes.add(boolean.class);
@@ -44,10 +52,11 @@ public class AtomicTypeResolver {
         defaultAtomicTypes.add(Enum.class);
 
         defaultAtomicTypes.add(Object.class);
+        defaultAtomicTypes.add(Class.class);
     }
 
     public boolean isAtomicType(Class<?> clazz) {
-        return defaultAtomicTypes.contains(clazz);
+        return allAtomicTypes.contains(clazz);
     }
 
     public boolean isNotAtomicType(Class<?> beanClass) {
