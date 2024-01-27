@@ -1,18 +1,29 @@
-package org.beanmodelgraph.drawer.model;
+package org.beanmodelgraph.drawer.dot.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NonNull;
 
 import java.util.Optional;
 
+
 @Data
-@AllArgsConstructor
 @Builder
 public class DotEdge {
-    private String source;
-    private String target;
+
+    @NonNull
+    private DotNode source;
+
+    @NonNull
+    private DotNode target;
+
+    @NonNull
     private Optional<String> label;
+
+    @NonNull
     private String arrowhead;
+
+    @NonNull
     private String style;
+
 }

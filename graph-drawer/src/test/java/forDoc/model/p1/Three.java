@@ -1,6 +1,7 @@
-package org.beanmodelgraph.drawer.integrationtest.ownmodel;
+package forDoc.model.p1;
 
 import lombok.Getter;
+import forDoc.model.One;
 
 @Getter
 public class Three {

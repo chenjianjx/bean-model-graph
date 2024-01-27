@@ -1,13 +1,15 @@
-package org.beanmodelgraph.drawer.renderer;
+package org.beanmodelgraph.drawer.dot.render.impl;
 
-import org.beanmodelgraph.drawer.model.DotEdge;
-import org.beanmodelgraph.drawer.model.DotGraph;
-import org.beanmodelgraph.drawer.model.DotNode;
+import lombok.NonNull;
+import org.beanmodelgraph.drawer.dot.model.DotEdge;
+import org.beanmodelgraph.drawer.dot.model.DotGraph;
+import org.beanmodelgraph.drawer.dot.model.DotNode;
+import org.beanmodelgraph.drawer.dot.render.DotGraphRenderer;
 
 public class DefaultDotGraphRenderer implements DotGraphRenderer {
 
     @Override
-    public String render(DotGraph dotGraph) { //TODO: make this code more structural
+    public String render(@NonNull DotGraph dotGraph) { //TODO: make this code more structural
         StringBuilder dotScript = new StringBuilder();
         dotScript.append("digraph {\n\n");
         dotScript.append("    node [shape=rectangle, style=rounded];\n");
@@ -16,16 +18,22 @@ public class DefaultDotGraphRenderer implements DotGraphRenderer {
 
         // Append nodes
         for (DotNode node : dotGraph.getNodes()) {
-            dotScript.append("    ").append(node.getName())
-                    .append(" [label=").append(doubleQuote(node.getLabel())).append("];\n");
+            dotScript.append("    ").append(node.getName());
+
+            if (node.getLabel().isPresent()) {
+                dotScript
+                        .append(" [label=").append(doubleQuote(node.getLabel().get())).append("]");
+            }
+
+            dotScript.append("\n");
         }
 
         dotScript.append("\n\n\n");
 
         // Append edges
         for (DotEdge edge : dotGraph.getEdges()) {
-            dotScript.append("    ").append(edge.getSource()).append(" -> ")
-                    .append(edge.getTarget());
+            dotScript.append("    ").append(edge.getSource().getName()).append(" -> ")
+                    .append(edge.getTarget().getName());
             dotScript.append(" [");
             dotScript.append("label=").append(doubleQuote(edge.getLabel().orElse("")));
             dotScript.append(", arrowhead=").append(doubleQuote(edge.getArrowhead()));
