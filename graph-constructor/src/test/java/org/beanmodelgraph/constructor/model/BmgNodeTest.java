@@ -11,14 +11,14 @@ class BmgNodeTest {
 
 
     @Test
-    public void equalsTest_sameObject() {
+    void equalsTest_sameObject() {
         BmgNode node = new BmgNode(String.class, true);
         node.setEdges(new ArrayList<>());
         assertTrue(node.equals(node));
     }
 
     @Test
-    public void equalsTest_sameContent() {
+    void equalsTest_sameContent() {
         assertFalse(new BmgNode(String.class, true).equals(new BmgNode(String.class, true)));
     }
 }

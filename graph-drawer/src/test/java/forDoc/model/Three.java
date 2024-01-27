@@ -1,9 +1,15 @@
 package forDoc.model;
 
 public class Three {
-    //    private forDoc.model.p1.Four p1Four;
-//    private forDoc.model.p2.Four p2Four;
-    private One getSomeOne() {
+    public forDoc.model.p1.Four getP1Four() {
+        return null;
+    }
+
+    public forDoc.model.p2.Four getP2Four() {
+        return null;
+    }
+
+    public One getSomeOne() {
         return null;
     }
 }

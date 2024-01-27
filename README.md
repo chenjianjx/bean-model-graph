@@ -23,11 +23,13 @@ public abstract class OneB implements One {
 }
 
 public class Two {
-    private Three three;
+    public Three getThree() {
+        return null;
+    }
 }
 
 public class Three {
-    private One getSomeOne() {
+    public One getSomeOne() {
         return null;
     }
 }

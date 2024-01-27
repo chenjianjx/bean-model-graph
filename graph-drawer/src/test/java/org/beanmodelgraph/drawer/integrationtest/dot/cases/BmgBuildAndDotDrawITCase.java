@@ -20,7 +20,7 @@ import java.util.stream.Stream;
 
 import static org.beanmodelgraph.testcommon.support.BmgITHelper.createResultFile;
 
-public class BmgBuildAndDotDrawITCase {
+class BmgBuildAndDotDrawITCase {
 
     BeanModelGraphDotDrawer dotDrawer = new BeanModelGraphDotDrawer(new DefaultDotGraphRenderer());
 
@@ -40,7 +40,7 @@ public class BmgBuildAndDotDrawITCase {
     @ParameterizedTest
     @MethodSource("paramProvider")
     @SneakyThrows
-    public void buildAndDotDraw(ConstructorTestParam param) {
+    void buildAndDotDraw(ConstructorTestParam param) {
         BeanModelGraphConstructor graphConstructor = new BeanModelGraphConstructor(param.getRootBeanClass(),
                 param.getSubTypeScanBasePackages(), param.getAdditionalAtomicTypes());
 

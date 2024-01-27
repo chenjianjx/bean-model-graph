@@ -8,7 +8,6 @@ import org.beanmodelgraph.drawer.dot.render.DotGraphRenderer;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static org.beanmodelgraph.constructor.util.BmgStringUtils.doubleQuote;
 import static org.beanmodelgraph.constructor.util.BmgStringUtils.join;

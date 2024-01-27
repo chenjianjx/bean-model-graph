@@ -16,6 +16,7 @@ class BeanModelGraphConstructorTest {
         private DedupeTestB b2;
     }
 
+    @Value
     public static class DedupeTestB {
         private DedupeTestA a;
     }

@@ -16,6 +16,7 @@
         <exclude name="JUnitAssertionsShouldIncludeMessage"/>
         <exclude name="JUnitTestsShouldIncludeAssert" />
         <exclude name="DoubleBraceInitialization" />
+        <exclude name="SimplifiableTestAssertion" />
     </rule>
 
     <rule ref="category/java/codestyle.xml/UnnecessaryImport"/>

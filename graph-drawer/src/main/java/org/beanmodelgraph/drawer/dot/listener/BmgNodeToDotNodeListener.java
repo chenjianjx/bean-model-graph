@@ -30,7 +30,7 @@ public class BmgNodeToDotNodeListener implements BmgNodeDfsListener {
 
     @Override
     public void onNode(List<BmgEdge> pathOfThisBmgNode, BmgNode bmgNode, Optional<BmgNode> prevBmgNodeOpt) {
-        DotNode dn = findOrCreateDotNode(bmgNode);
+        findOrCreateDotNode(bmgNode);
 
         if (prevBmgNodeOpt.isPresent()) {
             BmgEdge incomingEdge = pathOfThisBmgNode.get(pathOfThisBmgNode.size() - 1);

@@ -4,13 +4,11 @@ import forDoc.model.One;
 import forDoc.model.OneTwoThreePackageAnchor;
 import org.beanmodelgraph.constructor.BeanModelGraphConstructor;
 import org.beanmodelgraph.constructor.model.BmgGraph;
-import org.beanmodelgraph.constructor.model.BmgNode;
 import org.beanmodelgraph.drawer.dot.BeanModelGraphDotDrawer;
 import org.beanmodelgraph.drawer.dot.render.impl.DefaultDotGraphRenderer;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Optional;
 
 public class DotDrawer123Main {
 
