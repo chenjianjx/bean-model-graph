@@ -3,9 +3,11 @@ package org.beanmodelgraph.constructor.util;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Type;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class CollectionTypeUtilsTest {
 
@@ -17,6 +19,11 @@ class CollectionTypeUtilsTest {
     public Object[] getRawArray() {
         return null;
     }
+
+    public List<?> getVariableTypeList() {
+        return null;
+    }
+
 
     public List<String> getStringList() {
         return null;
@@ -64,6 +71,14 @@ class CollectionTypeUtilsTest {
         assertEquals(Object.class, CollectionTypeUtils.getMethodGenericReturnTypeIfArrayOrCollection(this.getClass().getMethod("getRawArray")));
     }
 
+
+    @Test
+    @SneakyThrows
+    void getMethodGenericReturnTypeIfArrayOrCollection_variableTypeList() {
+        assertThrows(UnsupportedOperationException.class, () -> CollectionTypeUtils.getMethodGenericReturnTypeIfArrayOrCollection(this.getClass().getMethod("getVariableTypeList")));
+    }
+
+
     @Test
     @SneakyThrows
     void getMethodGenericReturnTypeIfArrayOrCollection_stringList() {
@@ -110,6 +125,19 @@ class CollectionTypeUtilsTest {
     @SneakyThrows
     void getMethodGenericReturnTypeIfArrayOrCollection_arrayOfStringArrays() {
         assertEquals(String[].class, CollectionTypeUtils.getMethodGenericReturnTypeIfArrayOrCollection(this.getClass().getMethod("getArrayOfStringArrays")));
+    }
+
+
+    @Test
+    void getMethodGenericReturnTypeIfArrayOrCollection_unsupportedReturnType() {
+        Type fakeType = new Type() {
+            @Override
+            public String getTypeName() {
+                return Type.super.getTypeName();
+            }
+        };
+
+        assertThrows(UnsupportedOperationException.class, () -> CollectionTypeUtils.getMethodGenericReturnTypeIfArrayOrCollection(fakeType));
     }
 
 }

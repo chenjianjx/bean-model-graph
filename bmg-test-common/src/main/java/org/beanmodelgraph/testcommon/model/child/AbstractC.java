@@ -1,6 +1,7 @@
 package org.beanmodelgraph.testcommon.model.child;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.beanmodelgraph.testcommon.model.parent.IC;
 
 public abstract class AbstractC implements IC {
@@ -11,4 +12,7 @@ public abstract class AbstractC implements IC {
 
     @Getter
     private boolean someBoolean;
+
+    @Setter
+    private String propBySetter;
 }

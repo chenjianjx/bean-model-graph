@@ -14,9 +14,4 @@ public abstract class BmgEdge {
     @Getter
     @NonNull
     private BmgNode endingNode;
-
-    @Override
-    public int hashCode() {
-        return super.hashCode();
-    }
 }

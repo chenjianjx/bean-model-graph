@@ -7,6 +7,8 @@ import org.apache.commons.beanutils.PropertyUtils;
 import org.beanmodelgraph.constructor.helper.AtomicTypeResolver;
 import org.beanmodelgraph.constructor.helper.InheritanceService;
 import org.beanmodelgraph.constructor.model.BmgEdge;
+import org.beanmodelgraph.constructor.model.BmgEdgeColor;
+import org.beanmodelgraph.constructor.model.BmgGraph;
 import org.beanmodelgraph.constructor.model.BmgHasAEdge;
 import org.beanmodelgraph.constructor.model.BmgNode;
 import org.beanmodelgraph.constructor.model.BmgParentOfEdge;
@@ -43,11 +45,12 @@ import java.util.stream.Collectors;
 @Slf4j
 public class BeanModelGraphConstructor {
 
+    private final Set<Class<?>> additionalAtomicTypes;
     /**
      * a node here is not only constructed, but construction of its edges are in progress
      */
     Map<Class<?>, BmgNode> expandedNodes = new HashMap<>();
-    private AtomicTypeResolver atomicTypeResolver = new AtomicTypeResolver();
+    private AtomicTypeResolver atomicTypeResolver;
 
     private InheritanceService inheritanceService = new InheritanceService();
 
@@ -55,9 +58,14 @@ public class BeanModelGraphConstructor {
 
     private List<String> subTypeScanBasePackages;
 
-    public BeanModelGraphConstructor(@NonNull Class<?> rootBeanClass, @NonNull List<String> subTypeScanBasePackages) {
+    public BeanModelGraphConstructor(@NonNull Class<?> rootBeanClass,
+                                     @NonNull List<String> subTypeScanBasePackages,
+                                     @NonNull Set<Class<?>> additionalAtomicTypes
+    ) {
         this.rootBeanClass = rootBeanClass;
         this.subTypeScanBasePackages = subTypeScanBasePackages;
+        this.additionalAtomicTypes = additionalAtomicTypes;
+        this.atomicTypeResolver = new AtomicTypeResolver(additionalAtomicTypes);
     }
 
     /**
@@ -65,10 +73,13 @@ public class BeanModelGraphConstructor {
      *
      * @return The root node of this graph
      */
-    public BmgNode construct() {
+    public BmgGraph construct() {
         BmgNode rootNode = doConstruct(rootBeanClass);
         removeUnnecessaryHasAEdges(rootNode);
-        return rootNode;
+
+        return BmgGraph.builder()
+                .rootNode(rootNode)
+                .build();
     }
 
 
@@ -78,11 +89,12 @@ public class BeanModelGraphConstructor {
             return expandedNodeOpt.get();
         }
 
-
-        BmgNode rootNode = new BmgNode(beanClass);
+        boolean atomicType = atomicTypeResolver.isAtomicType(beanClass);
+        BmgNode rootNode = new BmgNode(beanClass, atomicType);
         expandedNodes.put(beanClass, rootNode);
 
-        if (atomicTypeResolver.isAtomicType(beanClass)
+
+        if (atomicType
                 || CollectionTypeUtils.isClassArrayOrCollection(beanClass)
                 || CollectionTypeUtils.isMap(beanClass)
         ) {
@@ -129,6 +141,8 @@ public class BeanModelGraphConstructor {
         if (!getterOpt.isPresent()) {
             log.warn("Cannot find getter method for property {}.{}. Will skip this property", beanClass.getSimpleName(), pd.getName());
             return Optional.empty();
+        } else {
+            log.debug("Build {} edge for property {}.{}", BmgEdgeColor.HAS_A, beanClass.getSimpleName(), pd.getName());
         }
 
 
@@ -169,7 +183,7 @@ public class BeanModelGraphConstructor {
 
         @Override
         public void onNode(List<BmgEdge> pathOfThisNode, BmgNode node, Optional<BmgNode> prevNodeOpt) {
-            if (pathOfThisNode.isEmpty() || !prevNodeOpt.isPresent()) {
+            if (!prevNodeOpt.isPresent()) {
                 return;
             }
 
@@ -187,7 +201,7 @@ public class BeanModelGraphConstructor {
                             .filter(pd -> pd.getName().equals(edge.getPropName()))
                             .findFirst().get().getReadMethod();
             if (inheritanceService.isMethodInheritedFrom(prevNodeBeanClass, getter, allClassesInGraph)) {
-                log.info("Remove edge {}.{} because the property is inherited", prevNodeBeanClass.getSimpleName(), edge.getPropName());
+                log.debug("Remove edge {}.{} because the property is inherited", prevNodeBeanClass.getSimpleName(), edge.getPropName());
                 prevNode.removeEdge(edge);
             }
 

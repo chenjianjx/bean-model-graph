@@ -4,6 +4,7 @@ import lombok.Value;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -15,13 +16,14 @@ class BeanModelGraphConstructorTest {
         private DedupeTestB b2;
     }
 
+    @Value
     public static class DedupeTestB {
         private DedupeTestA a;
     }
 
     @Test
     void constructFromBeanClass_dedupeTest() {
-        BeanModelGraphConstructor constructor = new BeanModelGraphConstructor(DedupeTestA.class, new ArrayList<>());
+        BeanModelGraphConstructor constructor = new BeanModelGraphConstructor(DedupeTestA.class, new ArrayList<>(), new HashSet<>());
         constructor.construct();
         assertEquals(2, constructor.expandedNodes.size());
     }

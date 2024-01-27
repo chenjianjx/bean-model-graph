@@ -17,17 +17,4 @@ public class BmgParentOfEdge extends BmgEdge {
     public BmgEdgeColor getColor() {
         return BmgEdgeColor.PARENT_OF;
     }
-
-    /**
-     * Only equals if the same object
-     */
-    @Override
-    public boolean equals(Object obj) {
-        return this == obj;
-    }
-
-    @Override
-    public int hashCode() {
-        return super.hashCode();
-    }
 }

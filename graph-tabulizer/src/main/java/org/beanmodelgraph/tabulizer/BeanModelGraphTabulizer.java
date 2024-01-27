@@ -1,7 +1,7 @@
 package org.beanmodelgraph.tabulizer;
 
 import org.beanmodelgraph.constructor.model.BmgEdge;
-import org.beanmodelgraph.constructor.model.BmgHasAEdge;
+import org.beanmodelgraph.constructor.model.BmgGraph;
 import org.beanmodelgraph.constructor.model.BmgNode;
 import org.beanmodelgraph.constructor.traverse.BmgDfsTraverser;
 import org.beanmodelgraph.constructor.traverse.BmgNodeDfsListener;
@@ -10,7 +10,6 @@ import org.beanmodelgraph.tabulizer.model.BmgRow;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class BeanModelGraphTabulizer {
 
@@ -30,10 +29,10 @@ public class BeanModelGraphTabulizer {
     }
 
 
-    public List<BmgRow> toRows(BmgNode rootNode) {
+    public List<BmgRow> toRows(BmgGraph bmgGraph) {
         NodeToRowListener nodeListener = new NodeToRowListener();
         BmgDfsTraverser traverser = new BmgDfsTraverser(nodeListener);
-        traverser.traverse(rootNode);
+        traverser.traverse(bmgGraph.getRootNode());
         List<BmgRow> rows = nodeListener.getRows();
 //        if(propertyPathOnly){
 //            rows = rows.stream().filter(r -> isPropertyPath(r.getPath())).collect(Collectors.toList());
@@ -41,8 +40,8 @@ public class BeanModelGraphTabulizer {
         return rows;
     }
 
-    private boolean isPropertyPath(List<BmgEdge> path) {
-        return path.size() > 0 && (path.get(path.size() - 1) instanceof BmgHasAEdge);
-    }
+//    private boolean isPropertyPath(List<BmgEdge> path) {
+//        return path.size() > 0 && (path.get(path.size() - 1) instanceof BmgHasAEdge);
+//    }
 
 }
