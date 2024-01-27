@@ -40,8 +40,7 @@ public class BmgBuildAndDotDrawITCase {
 
 
         BmgGraph bmgGraph = graphConstructor.construct();
-        String dotScript = dotDrawer.toDotScript(bmgGraph,
-                Optional.of(DotGraphRenderer.RenderOptions.builder().hideAtomicTypes(true).build()));
+        String dotScript = dotDrawer.toDotScript(bmgGraph);
 
         File dotFile = createSpreadsheetFile(this.getClass().getSimpleName(), "dot");
         Files.write(dotFile.toPath(), dotScript.getBytes("utf8"));

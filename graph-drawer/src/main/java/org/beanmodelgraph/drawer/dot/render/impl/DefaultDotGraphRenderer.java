@@ -20,20 +20,20 @@ public class DefaultDotGraphRenderer implements DotGraphRenderer {
     private static final String INDENT = "    ";
 
     @Override
-    public String render(@NonNull DotGraph dotGraph, @NonNull Optional<RenderOptions> options) {
+    public String render(@NonNull DotGraph dotGraph) {
         StringBuilder sb = new StringBuilder();
         appendNewLine(sb, "digraph {");
         appendNewLine(sb);
         appendNewLine(sb, INDENT + "node [shape=rectangle, style=rounded];");
         appendNewLine(sb);
 
-        dotGraph.getNodes().stream().filter(node -> shouldRetainNode(node, options))
+        dotGraph.getNodes().stream()
                 .forEach(node -> appendNewLine(sb, renderNode(node)));
 
         appendNewLine(sb);
         appendNewLine(sb);
 
-        dotGraph.getEdges().stream().filter(edge -> shouldRetainEdge(edge, options))
+        dotGraph.getEdges().stream()
                 .forEach(edge -> appendNewLine(sb, renderEdge(edge)));
 
         appendNewLine(sb);
@@ -41,14 +41,6 @@ public class DefaultDotGraphRenderer implements DotGraphRenderer {
         return sb.toString();
     }
 
-    private static boolean shouldRetainNode(DotNode node, Optional<RenderOptions> options) {
-        boolean hideAtomicTypes = options.isPresent() && options.get().isHideAtomicTypes();
-        return hideAtomicTypes ? !node.isAtomicType() : true;
-    }
-
-    private static boolean shouldRetainEdge(DotEdge edge, Optional<RenderOptions> options) {
-        return shouldRetainNode(edge.getSource(), options) && shouldRetainNode(edge.getTarget(), options);
-    }
 
 
     private String renderEdge(DotEdge edge) {

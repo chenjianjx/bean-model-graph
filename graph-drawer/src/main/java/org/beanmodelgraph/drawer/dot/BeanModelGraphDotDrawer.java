@@ -29,13 +29,9 @@ public class BeanModelGraphDotDrawer {
 
     public String toDotScript(@NonNull BmgGraph bmgGraph) {
         DotGraph dg = toDotGraph(bmgGraph);
-        return dotGraphRenderer.render(dg, Optional.empty());
+        return dotGraphRenderer.render(dg);
     }
 
-    public String toDotScript(@NonNull BmgGraph bmgGraph, @NonNull Optional<DotGraphRenderer.RenderOptions> renderOptions) {
-        DotGraph dg = toDotGraph(bmgGraph);
-        return dotGraphRenderer.render(dg, renderOptions);
-    }
 
     public DotGraph toDotGraph(@NonNull BmgGraph bmgGraph) {
 
