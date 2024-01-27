@@ -1,16 +1,23 @@
 package org.beanmodelgraph.drawer.dot.model;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.Builder;
+import lombok.NonNull;
+import lombok.Value;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
-@Getter
-@ToString
-@EqualsAndHashCode
+@Value
+@Builder
 public class DotGraph {
-    private List<DotNode> nodes = new ArrayList<>();
-    private List<DotEdge> edges = new ArrayList<>();
+    @NonNull
+    private List<DotNode> nodes;
+
+    @NonNull
+    private List<DotEdge> edges;
+
+    /******Non-dot properties*******/
+
+    @NonNull
+    private Set<Class<?>> additionalAtomicTypes;
 }

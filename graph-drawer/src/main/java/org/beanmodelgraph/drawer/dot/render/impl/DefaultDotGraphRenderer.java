@@ -7,7 +7,6 @@ import org.beanmodelgraph.drawer.dot.model.DotNode;
 import org.beanmodelgraph.drawer.dot.render.DotGraphRenderer;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,23 +20,38 @@ public class DefaultDotGraphRenderer implements DotGraphRenderer {
     private static final String INDENT = "    ";
 
     @Override
-    public String render(@NonNull DotGraph dotGraph, @NonNull Optional<RenderOptions> renderOptions) {
+    public String render(@NonNull DotGraph dotGraph, @NonNull Optional<RenderOptions> options) {
         StringBuilder sb = new StringBuilder();
         appendNewLine(sb, "digraph {");
         appendNewLine(sb);
         appendNewLine(sb, INDENT + "node [shape=rectangle, style=rounded];");
         appendNewLine(sb);
-        for (DotNode node : dotGraph.getNodes()) {
-            appendNewLine(sb, renderNode(node));
-        }
+
+        dotGraph.getNodes().stream().filter(node -> shouldRetainNode(dotGraph, node, options))
+                .forEach(node -> appendNewLine(sb, renderNode(node)));
+
         appendNewLine(sb);
         appendNewLine(sb);
-        for (DotEdge edge : dotGraph.getEdges()) {
-            appendNewLine(sb, renderEdge(edge));
-        }
+
+        dotGraph.getEdges().stream().filter(edge -> shouldRetainEdge(dotGraph, edge, options))
+                .forEach(edge -> appendNewLine(sb, renderEdge(edge)));
+        
         appendNewLine(sb);
         sb.append("}");
         return sb.toString();
+    }
+
+    private static boolean shouldRetainNode(DotGraph dotGraph, DotNode node, Optional<RenderOptions> options) {
+        boolean hideAtomicTypes = options.isPresent() && options.get().isHideAtomicTypes();
+        return hideAtomicTypes ? isNodeBeanClassNonAtomic(dotGraph, node) : true;
+    }
+
+    private static boolean shouldRetainEdge(DotGraph dotGraph, DotEdge edge, Optional<RenderOptions> options) {
+        return shouldRetainNode(dotGraph, edge.getSource(), options) && shouldRetainNode(dotGraph, edge.getTarget(), options);
+    }
+
+    private static boolean isNodeBeanClassNonAtomic(DotGraph dotGraph, DotNode node) {
+        return !dotGraph.getAdditionalAtomicTypes().contains(node.getBeanClass());
     }
 
     private String renderEdge(DotEdge edge) {
@@ -53,8 +67,6 @@ public class DefaultDotGraphRenderer implements DotGraphRenderer {
         line.append("];");
         return line.toString();
     }
-
-
 
 
     private String renderNode(DotNode node) {

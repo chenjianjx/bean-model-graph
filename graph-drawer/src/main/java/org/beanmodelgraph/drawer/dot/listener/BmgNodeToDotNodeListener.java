@@ -1,6 +1,6 @@
 package org.beanmodelgraph.drawer.dot.listener;
 
-import lombok.NonNull;
+import lombok.Getter;
 import org.beanmodelgraph.constructor.model.BmgEdge;
 import org.beanmodelgraph.constructor.model.BmgHasAEdge;
 import org.beanmodelgraph.constructor.model.BmgNode;
@@ -9,18 +9,24 @@ import org.beanmodelgraph.constructor.traverse.BmgNodeDfsListener;
 import org.beanmodelgraph.drawer.dot.model.DotEdge;
 import org.beanmodelgraph.drawer.dot.model.DotNode;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * one time use
+ */
 public class BmgNodeToDotNodeListener implements BmgNodeDfsListener {
 
-    private List<DotNode> dotNodes;
-    private List<DotEdge> dotEdges;
+    @Getter
+    private List<DotNode> dotNodes = new ArrayList<>();
 
-    public BmgNodeToDotNodeListener(@NonNull List<DotNode> nodes, @NonNull List<DotEdge> edges) {
-        this.dotNodes = nodes;
-        this.dotEdges = edges;
-    }
+    @Getter
+    private List<DotEdge> dotEdges = new ArrayList<>();
+
+
+
+
 
     @Override
     public void onNode(List<BmgEdge> pathOfThisBmgNode, BmgNode bmgNode, Optional<BmgNode> prevBmgNodeOpt) {
@@ -74,5 +80,7 @@ public class BmgNodeToDotNodeListener implements BmgNodeDfsListener {
                 .build();
         return dn;
     }
+
+
 
 }

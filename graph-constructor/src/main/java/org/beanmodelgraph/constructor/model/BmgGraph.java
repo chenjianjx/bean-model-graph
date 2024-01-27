@@ -13,7 +13,4 @@ public class BmgGraph {
 
     @NonNull
     private BmgNode rootNode;
-
-    @NonNull
-    private Set<Class<?>> additionalAtomicTypes;
 }

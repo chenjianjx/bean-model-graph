@@ -2,13 +2,13 @@ package org.beanmodelgraph.drawer.dot;
 
 import lombok.NonNull;
 import org.beanmodelgraph.constructor.model.BmgGraph;
-import org.beanmodelgraph.constructor.model.BmgNode;
 import org.beanmodelgraph.constructor.traverse.BmgDfsTraverser;
 import org.beanmodelgraph.drawer.dot.listener.BmgNodeToDotNodeListener;
 import org.beanmodelgraph.drawer.dot.model.DotGraph;
 import org.beanmodelgraph.drawer.dot.model.DotNode;
 import org.beanmodelgraph.drawer.dot.render.DotGraphRenderer;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -39,11 +39,17 @@ public class BeanModelGraphDotDrawer {
     }
 
     public DotGraph toDotGraph(@NonNull BmgGraph bmgGraph) {
-        DotGraph dg = new DotGraph();
-        BmgNodeToDotNodeListener nodeListener = new BmgNodeToDotNodeListener(dg.getNodes(), dg.getEdges());
+
+        BmgNodeToDotNodeListener nodeListener = new BmgNodeToDotNodeListener();
         BmgDfsTraverser traverser = new BmgDfsTraverser(nodeListener);
         traverser.traverse(bmgGraph.getRootNode());
-        distinguishNameTwins(dg.getNodes());
+        distinguishNameTwins(nodeListener.getDotNodes());
+
+        DotGraph dg = DotGraph.builder()
+                .nodes(nodeListener.getDotNodes())
+                .edges(nodeListener.getDotEdges())
+                .additionalAtomicTypes(Collections.unmodifiableSet(bmgGraph.getAdditionalAtomicTypes()))
+                .build();
         return dg;
     }
 
