@@ -20,6 +20,7 @@ public class DefaultDotGraphRenderer implements DotGraphRenderer {
     public String render(@NonNull DotGraph dotGraph) {
         StringBuilder sb = new StringBuilder();
         appendNewLine(sb, "digraph {");
+        appendNewLine(sb);
         appendNewLine(sb, INDENT + "node [shape=rectangle, style=rounded];");
         appendNewLine(sb);
         for (DotNode node : dotGraph.getNodes()) {
