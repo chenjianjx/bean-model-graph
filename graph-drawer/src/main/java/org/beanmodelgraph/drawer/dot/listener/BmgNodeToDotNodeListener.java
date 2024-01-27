@@ -49,7 +49,7 @@ public class BmgNodeToDotNodeListener implements BmgNodeDfsListener {
         return dotNode;
     }
 
-    private DotEdge toDotEdge(BmgNode prevBmgNode, BmgEdge bmgEdge) {
+    DotEdge toDotEdge(BmgNode prevBmgNode, BmgEdge bmgEdge) {
         DotEdge.DotEdgeBuilder builder = DotEdge.builder();
 
         if (bmgEdge instanceof BmgHasAEdge) {
