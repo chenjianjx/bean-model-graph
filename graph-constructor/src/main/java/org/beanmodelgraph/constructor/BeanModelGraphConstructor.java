@@ -8,6 +8,7 @@ import org.beanmodelgraph.constructor.helper.AtomicTypeResolver;
 import org.beanmodelgraph.constructor.helper.InheritanceService;
 import org.beanmodelgraph.constructor.model.BmgEdge;
 import org.beanmodelgraph.constructor.model.BmgEdgeColor;
+import org.beanmodelgraph.constructor.model.BmgGraph;
 import org.beanmodelgraph.constructor.model.BmgHasAEdge;
 import org.beanmodelgraph.constructor.model.BmgNode;
 import org.beanmodelgraph.constructor.model.BmgParentOfEdge;
@@ -44,6 +45,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class BeanModelGraphConstructor {
 
+    private final Set<Class<?>> additionalAtomicTypes;
     /**
      * a node here is not only constructed, but construction of its edges are in progress
      */
@@ -62,6 +64,7 @@ public class BeanModelGraphConstructor {
     ) {
         this.rootBeanClass = rootBeanClass;
         this.subTypeScanBasePackages = subTypeScanBasePackages;
+        this.additionalAtomicTypes = additionalAtomicTypes;
         this.atomicTypeResolver = new AtomicTypeResolver(additionalAtomicTypes);
     }
 
@@ -70,10 +73,13 @@ public class BeanModelGraphConstructor {
      *
      * @return The root node of this graph
      */
-    public BmgNode construct() {
+    public BmgGraph construct() {
         BmgNode rootNode = doConstruct(rootBeanClass);
         removeUnnecessaryHasAEdges(rootNode);
-        return rootNode;
+
+        return BmgGraph.builder()
+                .rootNode(rootNode)
+                .additionalAtomicTypes(Collections.unmodifiableSet(this.additionalAtomicTypes)).build();
     }
 
 
@@ -134,7 +140,7 @@ public class BeanModelGraphConstructor {
         if (!getterOpt.isPresent()) {
             log.warn("Cannot find getter method for property {}.{}. Will skip this property", beanClass.getSimpleName(), pd.getName());
             return Optional.empty();
-        }else {
+        } else {
             log.debug("Build {} edge for property {}.{}", BmgEdgeColor.HAS_A, beanClass.getSimpleName(), pd.getName());
         }
 

@@ -2,6 +2,7 @@ package org.beanmodelgraph.drawer.integrationtest.dot.cases;
 
 import lombok.SneakyThrows;
 import org.beanmodelgraph.constructor.BeanModelGraphConstructor;
+import org.beanmodelgraph.constructor.model.BmgGraph;
 import org.beanmodelgraph.constructor.model.BmgNode;
 import org.beanmodelgraph.drawer.dot.BeanModelGraphDotDrawer;
 import org.beanmodelgraph.drawer.dot.render.DotGraphRenderer;
@@ -38,8 +39,8 @@ public class BmgBuildAndDotDrawITCase {
                 param.getSubTypeScanBasePackages(), param.getAdditionalAtomicTypes());
 
 
-        BmgNode rootNode = graphConstructor.construct();
-        String dotScript = dotDrawer.toDotScript(rootNode,
+        BmgGraph bmgGraph = graphConstructor.construct();
+        String dotScript = dotDrawer.toDotScript(bmgGraph,
                 Optional.of(DotGraphRenderer.RenderOptions.builder().hideAtomicTypes(true).build()));
 
         File dotFile = createSpreadsheetFile(this.getClass().getSimpleName(), "dot");

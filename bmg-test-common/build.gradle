@@ -1,7 +1,5 @@
 dependencies {
     api "com.paypal.sdk:rest-api-sdk"
-
     compileOnly "org.projectlombok:lombok"
     annotationProcessor "org.projectlombok:lombok"
-
 }

@@ -1,6 +1,7 @@
 package org.beanmodelgraph.drawer.dot;
 
 import lombok.NonNull;
+import org.beanmodelgraph.constructor.model.BmgGraph;
 import org.beanmodelgraph.constructor.model.BmgNode;
 import org.beanmodelgraph.constructor.traverse.BmgDfsTraverser;
 import org.beanmodelgraph.drawer.dot.listener.BmgNodeToDotNodeListener;
@@ -27,21 +28,21 @@ public class BeanModelGraphDotDrawer {
         this.dotGraphRenderer = dotGraphRenderer;
     }
 
-    public String toDotScript(@NonNull BmgNode rootNode) {
-        DotGraph dg = toDotGraph(rootNode);
+    public String toDotScript(@NonNull BmgGraph bmgGraph) {
+        DotGraph dg = toDotGraph(bmgGraph);
         return dotGraphRenderer.render(dg, Optional.empty());
     }
 
-    public String toDotScript(@NonNull BmgNode rootNode, @NonNull Optional<DotGraphRenderer.RenderOptions> renderOptions) {
-        DotGraph dg = toDotGraph(rootNode);
+    public String toDotScript(@NonNull BmgGraph bmgGraph, @NonNull Optional<DotGraphRenderer.RenderOptions> renderOptions) {
+        DotGraph dg = toDotGraph(bmgGraph);
         return dotGraphRenderer.render(dg, renderOptions);
     }
 
-    public DotGraph toDotGraph(@NonNull BmgNode rootNode) {
+    public DotGraph toDotGraph(@NonNull BmgGraph bmgGraph) {
         DotGraph dg = new DotGraph();
         BmgNodeToDotNodeListener nodeListener = new BmgNodeToDotNodeListener(dg.getNodes(), dg.getEdges());
         BmgDfsTraverser traverser = new BmgDfsTraverser(nodeListener);
-        traverser.traverse(rootNode);
+        traverser.traverse(bmgGraph.getRootNode());
         distinguishNameTwins(dg.getNodes());
         return dg;
     }

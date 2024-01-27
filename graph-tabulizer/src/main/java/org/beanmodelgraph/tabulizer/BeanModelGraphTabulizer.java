@@ -1,6 +1,7 @@
 package org.beanmodelgraph.tabulizer;
 
 import org.beanmodelgraph.constructor.model.BmgEdge;
+import org.beanmodelgraph.constructor.model.BmgGraph;
 import org.beanmodelgraph.constructor.model.BmgHasAEdge;
 import org.beanmodelgraph.constructor.model.BmgNode;
 import org.beanmodelgraph.constructor.traverse.BmgDfsTraverser;
@@ -30,10 +31,10 @@ public class BeanModelGraphTabulizer {
     }
 
 
-    public List<BmgRow> toRows(BmgNode rootNode) {
+    public List<BmgRow> toRows(BmgGraph bmgGraph) {
         NodeToRowListener nodeListener = new NodeToRowListener();
         BmgDfsTraverser traverser = new BmgDfsTraverser(nodeListener);
-        traverser.traverse(rootNode);
+        traverser.traverse(bmgGraph.getRootNode());
         List<BmgRow> rows = nodeListener.getRows();
 //        if(propertyPathOnly){
 //            rows = rows.stream().filter(r -> isPropertyPath(r.getPath())).collect(Collectors.toList());
