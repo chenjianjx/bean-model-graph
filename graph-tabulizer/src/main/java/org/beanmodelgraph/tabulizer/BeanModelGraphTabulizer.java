@@ -42,8 +42,8 @@ public class BeanModelGraphTabulizer {
         return rows;
     }
 
-    private boolean isPropertyPath(List<BmgEdge> path) {
-        return path.size() > 0 && (path.get(path.size() - 1) instanceof BmgHasAEdge);
-    }
+//    private boolean isPropertyPath(List<BmgEdge> path) {
+//        return path.size() > 0 && (path.get(path.size() - 1) instanceof BmgHasAEdge);
+//    }
 
 }
