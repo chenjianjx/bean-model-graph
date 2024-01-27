@@ -58,8 +58,4 @@ public class AtomicTypeResolver {
     public boolean isAtomicType(Class<?> clazz) {
         return allAtomicTypes.contains(clazz);
     }
-
-    public boolean isNotAtomicType(Class<?> beanClass) {
-        return this.isAtomicType(beanClass);
-    }
 }

@@ -151,6 +151,13 @@ jacocoTestReport {
     sourceDirectories = files(subprojects.sourceSets.main.allSource.srcDirs)
     classDirectories = files(subprojects.sourceSets.main.output)
     executionData = files(subprojects.jacocoTestReport.executionData)
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                    "org/beanmodelgraph/testcommon/model/excludedchild/**/*"
+            ])
+        }))
+    }
 }
 
 jacocoTestCoverageVerification {
