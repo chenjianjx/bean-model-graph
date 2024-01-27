@@ -3,7 +3,6 @@ package org.beanmodelgraph.tabulizer.integrationtest.cases;
 import lombok.SneakyThrows;
 import org.beanmodelgraph.constructor.BeanModelGraphConstructor;
 import org.beanmodelgraph.constructor.model.BmgGraph;
-import org.beanmodelgraph.constructor.model.BmgNode;
 import org.beanmodelgraph.tabulizer.BeanModelGraphTabulizer;
 import org.beanmodelgraph.tabulizer.integrationtest.model.BmgRowViewObject;
 import org.beanmodelgraph.tabulizer.model.BmgRow;
@@ -22,7 +21,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.beanmodelgraph.testcommon.support.BmgITHelper.createSpreadsheetFile;
+import static org.beanmodelgraph.testcommon.support.BmgITHelper.createResultFile;
 
 public class BmgBuildAndTabulizeITCase {
 
@@ -47,19 +46,15 @@ public class BmgBuildAndTabulizeITCase {
         BmgGraph bmgGraph = graphConstructor.construct();
         List<BmgRow> rows = graphTabulizer.toRows(bmgGraph);
 
-        List<BmgRowViewObject> viewObjects = rows.stream().map(this::fromBizObject).collect(Collectors.toList());
+        List<BmgRowViewObject> viewObjects = rows.stream().map(BmgRowViewObject::fromBmgRow).collect(Collectors.toList());
 
-        File tableFile = createSpreadsheetFile(this.getClass().getSimpleName(), "html");
+        File tableFile = createResultFile(this.getClass().getSimpleName(), "html");
         try (OutputStream outputStream = Files.newOutputStream(tableFile.toPath())) {
             HtmlTableSsioTemplate.defaultInstance().toHtmlPage(viewObjects, BmgRowViewObject.class, outputStream, "utf8", false);
         }
     }
 
 
-    private BmgRowViewObject fromBizObject(BmgRow bo) {
-        return BmgRowViewObject.builder()
-                .propertyPath(rowPathRenderer.render(bo.getPath()))
-                .typeSimpleName(bo.getType().getSimpleName()).build();
-    }
+
 
 }

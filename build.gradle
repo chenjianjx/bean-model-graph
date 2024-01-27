@@ -17,6 +17,7 @@ allprojects {
     apply plugin: 'java'
     apply plugin: 'jacoco'
     repositories {
+        mavenLocal()
         mavenCentral()
     }
 }
@@ -53,7 +54,7 @@ subprojects {
 
             dependency 'org.junit.jupiter:junit-jupiter:5.10.1'
             dependency "org.slf4j:slf4j-simple:${slf4jVersion}"
-            dependency 'com.github.chenjianjx.ssio:ssio-ext-html-table:2.0.0'
+            dependency 'com.github.chenjianjx.ssio:ssio-ext-html-table:2.0.1-SNAPSHOT'
             dependency 'org.reflections:reflections:0.10.2'
 
             dependency 'com.paypal.sdk:rest-api-sdk:1.14.0'

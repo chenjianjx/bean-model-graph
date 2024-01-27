@@ -18,7 +18,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.stream.Stream;
 
-import static org.beanmodelgraph.testcommon.support.BmgITHelper.createSpreadsheetFile;
+import static org.beanmodelgraph.testcommon.support.BmgITHelper.createResultFile;
 
 public class BmgBuildAndDotDrawITCase {
 
@@ -48,7 +48,7 @@ public class BmgBuildAndDotDrawITCase {
         BmgGraph bmgGraph = graphConstructor.construct();
         String dotScript = dotDrawer.toDotScript(bmgGraph);
 
-        File dotFile = createSpreadsheetFile(this.getClass().getSimpleName(), "dot");
+        File dotFile = createResultFile(this.getClass().getSimpleName(), "dot");
         Files.write(dotFile.toPath(), dotScript.getBytes("utf8"));
     }
 

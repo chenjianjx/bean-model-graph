@@ -13,7 +13,6 @@ import java.util.List;
 @ToString
 public class BmgNode {
 
-
     private final Class<?> beanClass;
 
     @NonNull
